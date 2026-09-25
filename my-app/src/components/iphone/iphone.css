@@ -1,0 +1,1448 @@
+/* ===================================================
+   IPHONE 6 / iFRUIT GTA V CYBER SMARTPHONE STYLES
+   Space Gray Chassis + Touch ID + 3x3 App Grid + Clash Royale
+   =================================================== */
+
+/* ПЛАВАЮЩИЙ GTA 5 ТРИГГЕР ВНИЗУ ЭКРАНА */
+.gta-phone-trigger-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #1c1510 0%, #2e1d14 50%, #110b07 100%);
+  border: 1.5px solid #ff7700;
+  border-radius: 40px;
+  padding: 8px 16px 8px 12px;
+  color: #fff;
+  cursor: pointer;
+  z-index: 1200;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85), 0 0 15px rgba(255, 119, 0, 0.45);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.gta-phone-trigger-fab:hover {
+  transform: translateY(-3px) scale(1.05);
+  border-color: #ffd700;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.95), 0 0 25px rgba(255, 215, 0, 0.6);
+}
+
+.gta-phone-trigger-fab.active {
+  border-color: #00ff80;
+  box-shadow: 0 0 20px rgba(0, 255, 128, 0.6);
+}
+
+.phone-fab-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 6px #ff7700);
+}
+
+.phone-fab-labels {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.fab-brand {
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: #ffd700;
+  letter-spacing: 0.5px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.fab-sub {
+  font-size: 0.64rem;
+  color: #aaa;
+  letter-spacing: 0.5px;
+}
+
+.fab-ping-glow {
+  width: 8px;
+  height: 8px;
+  background: #00ff80;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #00ff80;
+  animation: pulseDot 1.5s infinite;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+/* ОБЕРТКА ТЕЛЕФОНА — ВЫЕЗЖАЕТ ИЗ ПРАВОГО НИЖНЕГО УГЛА КАК В GTA V */
+.iphone-modal-wrapper {
+  position: fixed;
+  bottom: 16px;
+  right: 28px;
+  z-index: 1500;
+  animation: ifruitSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ifruitSlideUp {
+  0% {
+    transform: translateY(105%) scale(0.92);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* КОРПУС СМАРТФОНА IFRUIT (APPLE IPHONE 6 SPACE GRAY / GOLD) */
+.iphone-chassis.gta-ifruit-chassis {
+  position: relative;
+  width: 340px;
+  height: 640px;
+  background: #252429;
+  border: 4px solid #3c3b42;
+  border-radius: 50px;
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.98), inset 0 0 10px rgba(255, 255, 255, 0.1), 0 0 35px rgba(255, 119, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 10px 12px 10px;
+  box-sizing: border-box;
+}
+
+/* ТЕМЫ ОБОЕВ IFRUIT */
+.theme-dark .iphone-retina-screen {
+  background: radial-gradient(circle at center, #18181f 0%, #0d0c11 100%);
+}
+.theme-sunset .iphone-retina-screen {
+  background: linear-gradient(180deg, #ff5e36 0%, #c41e3a 40%, #200020 100%);
+}
+.theme-matrix .iphone-retina-screen {
+  background: radial-gradient(circle at center, #022410 0%, #000c05 100%);
+}
+.theme-somali .iphone-retina-screen {
+  background: linear-gradient(135deg, #1f0b00 0%, #3a1500 50%, #0c0400 100%);
+}
+
+/* Антенные полосы */
+.antenna-stripe {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+.antenna-stripe.top { top: 46px; }
+.antenna-stripe.bottom { bottom: 62px; }
+
+/* Верхние датчики и камера */
+.iphone-top-sensors {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  height: 18px;
+  margin-bottom: 8px;
+}
+
+.front-camera-lens {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0f172a;
+  border: 1px solid #334155;
+}
+
+.earpiece-speaker {
+  width: 52px;
+  height: 4px;
+  border-radius: 3px;
+  background: #111;
+  border: 1px solid #444;
+}
+
+/* РЕТИНА ЭКРАН IFRUIT */
+.iphone-retina-screen.gta-screen-content {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.85);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* GTA V УВЕДОМЛЕНИЕ О БЫСТРОМ СОХРАНЕНИИ (GOLDEN STAR BANNER) */
+.gta-save-toast-banner {
+  position: absolute;
+  top: 32px;
+  left: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.9);
+  border: 1.5px solid #ffd700;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #ffd700;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 15px rgba(255, 215, 0, 0.5);
+  animation: saveBannerPop 0.25s ease-out;
+}
+
+@keyframes saveBannerPop {
+  0% { transform: translateY(-15px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.gta-save-star {
+  font-size: 1.1rem;
+  color: #ffd700;
+}
+
+/* СТАТУС-БАР ТЕЛЕФОНА */
+.gta-status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 10px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  z-index: 10;
+}
+
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.signal-bars {
+  letter-spacing: -1px;
+  color: #00ff80;
+}
+
+.status-center .time-display {
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.battery-icon {
+  width: 16px;
+  height: 8px;
+  border: 1px solid #fff;
+  border-radius: 2px;
+  padding: 1px;
+  display: flex;
+  align-items: center;
+}
+
+.battery-icon .bat-level {
+  width: 100%;
+  height: 100%;
+  background: #00ff80;
+  border-radius: 1px;
+}
+
+/* ===================================================
+   1. ДОМАШНИЙ ЭКРАН IFRUIT: СЕТКА 3X3 ИКОНОК
+   =================================================== */
+.gta-home-grid-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 12px 10px 12px;
+}
+
+.gta-home-header-widget {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(4px);
+}
+
+.ifruit-logo-tag {
+  color: #ffd700;
+  font-weight: 900;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.maze-balance-micro {
+  font-size: 0.65rem;
+  color: #aaa;
+}
+
+.maze-amt {
+  color: #00ff80;
+  font-weight: 900;
+  margin-left: 4px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* СЕТКА 3X3 ИКОНОК */
+.gta-apps-3x3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px 12px;
+  padding: 10px 4px;
+}
+
+.gta-app-icon-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.gta-app-icon-slot:hover {
+  transform: translateY(-4px) scale(1.06);
+}
+
+.gta-app-icon-slot:active {
+  transform: scale(0.92);
+}
+
+.app-icon-box {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  margin-bottom: 4px;
+}
+
+.app-emoji {
+  font-size: 1.8rem;
+}
+
+.cr-app-box { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+.sms-app-box { background: linear-gradient(135deg, #15803d 0%, #22c55e 100%); }
+.contacts-app-box { background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%); }
+.web-app-box { background: linear-gradient(135deg, #1e40af 0%, #60a5fa 100%); }
+.camera-app-box { background: linear-gradient(135deg, #d97706 0%, #fbbf24 100%); }
+.radio-app-box { background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%); }
+.garage-app-box { background: linear-gradient(135deg, #b91c1c 0%, #ef4444 100%); }
+.save-app-box { background: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%); }
+.settings-app-box { background: linear-gradient(135deg, #475569 0%, #94a3b8 100%); }
+
+.app-badge-pill {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ffd700;
+  color: #000;
+  font-size: 0.52rem;
+  font-weight: 900;
+  padding: 1px 4px;
+  border-radius: 6px;
+}
+
+.app-counter-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 900;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #fff;
+}
+
+.app-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+}
+
+/* НИЖНИЙ ДОК БЫСТРОГО ДОСТУПА */
+.gta-bottom-dock {
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 6px 12px;
+  display: flex;
+  justify-content: space-around;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dock-btn {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.dock-btn:hover {
+  transform: translateY(-3px) scale(1.15);
+}
+
+/* ===================================================
+   ОБЩИЕ СТИЛИ ВНУТРЕННИХ СТРАНИЦ ПРИЛОЖЕНИЙ
+   =================================================== */
+.gta-app-inner-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #0f1015;
+  color: #fff;
+  overflow-y: auto;
+}
+
+.gta-app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #171821;
+  border-bottom: 1px solid #282936;
+}
+
+.gta-app-header h4 {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.gta-back-arrow {
+  background: none;
+  border: none;
+  color: #38bdf8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+.gta-hdr-icon {
+  font-size: 1.1rem;
+}
+
+/* ===================================================
+   ЭКРАН АКТИВНОГО ЗВОНКА (CALL SCREEN)
+   =================================================== */
+.gta-call-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+  background: radial-gradient(circle at center, #1b263b 0%, #0d131f 100%);
+  color: #fff;
+  text-align: center;
+}
+
+.call-avatar-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+  border: 2px solid #38bdf8;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+}
+
+.call-contact-name {
+  margin: 0 0 4px 0;
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.call-contact-role {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 12px;
+}
+
+.call-status-badge {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.9rem;
+  color: #00ff80;
+  margin-bottom: 16px;
+}
+
+.call-dialog-bubble {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #38bdf8;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: #e2e8f0;
+  margin-bottom: 24px;
+  max-width: 90%;
+}
+
+.call-hangup-btn {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 24px;
+  font-size: 0.85rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.5);
+  transition: transform 0.15s;
+}
+
+.call-hangup-btn:hover {
+  transform: scale(1.05);
+  background: #dc2626;
+}
+
+/* ===================================================
+   СООБЩЕНИЯ (SMS VIEW)
+   =================================================== */
+.gta-messages-list {
+  padding: 8px;
+}
+
+.gta-message-item {
+  background: #181924;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border: 1px solid #292a3a;
+  transition: background 0.2s;
+}
+
+.gta-message-item:hover {
+  background: #232536;
+  border-color: #38bdf8;
+}
+
+.msg-sender-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.msg-sender-name {
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: #38bdf8;
+}
+
+.msg-time {
+  font-size: 0.65rem;
+  color: #888;
+}
+
+.msg-preview-text {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #cbd5e1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gta-sms-thread-view {
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sms-thread-sender {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #282936;
+  font-size: 0.85rem;
+}
+
+.sms-thread-bubble.incoming {
+  background: #22c55e;
+  color: #000;
+  font-weight: 600;
+  border-radius: 12px 12px 12px 2px;
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+.sms-quick-reply-box {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quick-reply-label {
+  font-size: 0.68rem;
+  color: #888;
+}
+
+.gta-reply-btn {
+  background: #1e293b;
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  font-size: 0.72rem;
+  padding: 8px 10px;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gta-reply-btn:hover {
+  background: #38bdf8;
+  color: #000;
+}
+
+/* ===================================================
+   КОНТАКТЫ (CONTACTS VIEW)
+   =================================================== */
+.gta-contacts-list {
+  padding: 8px;
+}
+
+.gta-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #181924;
+  border: 1px solid #292a3a;
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.gta-contact-item:hover {
+  border-color: #00ff80;
+  background: #202233;
+}
+
+.contact-avatar-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2d3748;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.contact-info-col {
+  flex: 1;
+}
+
+.contact-name-txt {
+  display: block;
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+.contact-role-txt {
+  font-size: 0.65rem;
+  color: #94a3b8;
+}
+
+.contact-call-icon-btn {
+  background: #15803d;
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* ===================================================
+   БРАУЗЕР MAZE BANK
+   =================================================== */
+.browser-header {
+  background: #b91c1c !important;
+}
+
+.browser-url-bar {
+  background: #fff;
+  color: #333;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.68rem;
+  font-family: monospace;
+  width: 65%;
+  text-align: center;
+}
+
+.maze-bank-portal {
+  padding: 14px 12px;
+}
+
+.maze-bank-hero {
+  text-align: center;
+  background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+  padding: 14px 10px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+
+.maze-bank-hero h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.maze-slogan {
+  font-size: 0.6rem;
+  color: #fca5a5;
+  letter-spacing: 0.5px;
+}
+
+.maze-account-box {
+  background: #181924;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.maze-acc-label {
+  font-size: 0.68rem;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.maze-acc-balance {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #00ff80;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.maze-recent-log h5 {
+  margin: 0 0 8px 0;
+  font-size: 0.72rem;
+  color: #888;
+}
+
+.maze-tx-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #232536;
+  font-size: 0.72rem;
+}
+
+.tx-red { color: #ef4444; font-weight: 800; }
+.tx-green { color: #00ff80; font-weight: 800; }
+.tx-gray { color: #888; }
+
+/* ===================================================
+   КАМЕРА SNAPMATIC
+   =================================================== */
+.gta-snapmatic-view {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #000;
+}
+
+.filter-gold { filter: sepia(0.6) hue-rotate(15deg); }
+.filter-noir { filter: grayscale(1) contrast(1.3); }
+.filter-vamp { filter: saturate(2) hue-rotate(330deg); }
+
+.snapmatic-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10;
+}
+
+.snapmatic-exit-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.snapmatic-logo {
+  color: #ffd700;
+  font-weight: 900;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.snapmatic-filter-toggle {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid #ffd700;
+  color: #ffd700;
+  font-size: 0.6rem;
+  padding: 3px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.snapmatic-viewfinder-grid {
+  flex: 1;
+  position: relative;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  margin: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+}
+
+.grid-center-crosshair {
+  font-size: 2rem;
+  color: rgba(255, 215, 0, 0.4);
+}
+
+.photo-saved-badge {
+  position: absolute;
+  bottom: 14px;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1.5px solid #00ff80;
+  color: #00ff80;
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.camera-flash-overlay {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  z-index: 50;
+  animation: flash 0.2s ease-out;
+}
+
+@keyframes flash {
+  0% { opacity: 0.9; }
+  100% { opacity: 0; }
+}
+
+.snapmatic-bottom-bar {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.snapmatic-shutter-btn {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #fff;
+  border: 4px solid #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  transition: transform 0.1s;
+}
+
+.snapmatic-shutter-btn:active {
+  transform: scale(0.9);
+}
+
+.shutter-inner-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e2e8f0;
+}
+
+/* ===================================================
+   РАДИО (RADIO PLAYER)
+   =================================================== */
+.gta-radio-player-card {
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.radio-wheel-art {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #ea580c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  margin-bottom: 14px;
+  box-shadow: 0 0 25px rgba(234, 88, 12, 0.5);
+  animation: spinRecord 6s linear infinite;
+}
+
+@keyframes spinRecord {
+  100% { transform: rotate(360deg); }
+}
+
+.current-station-title {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  color: #ffd700;
+  font-weight: 900;
+}
+
+.track-title-now {
+  font-size: 0.72rem;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+}
+
+.radio-play-btn {
+  background: #ea580c;
+  border: none;
+  color: #fff;
+  padding: 10px 28px;
+  border-radius: 20px;
+  font-weight: 900;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(234, 88, 12, 0.5);
+}
+
+.radio-stations-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-top: 24px;
+}
+
+.station-chip {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.station-chip.active {
+  border-color: #ffd700;
+  color: #ffd700;
+  font-weight: 800;
+  background: #2d3748;
+}
+
+/* ===================================================
+   ГАРАЖ И АВТОМЕХАНИК
+   =================================================== */
+.gta-garage-list {
+  padding: 8px;
+}
+
+.gta-vehicle-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #181924;
+  border: 1px solid #292a3a;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+.veh-icon {
+  font-size: 1.8rem;
+}
+
+.veh-info {
+  flex: 1;
+}
+
+.veh-name {
+  display: block;
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: #fff;
+}
+
+.veh-details {
+  font-size: 0.65rem;
+  color: #94a3b8;
+}
+
+.veh-order-btn {
+  background: #ef4444;
+  border: none;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.veh-order-btn:hover {
+  background: #dc2626;
+}
+
+/* ===================================================
+   НАСТРОЙКИ (SETTINGS)
+   =================================================== */
+.gta-settings-list {
+  padding: 14px 12px;
+}
+
+.settings-section {
+  margin-bottom: 18px;
+}
+
+.settings-section label {
+  display: block;
+  font-size: 0.68rem;
+  color: #888;
+  margin-bottom: 8px;
+  font-weight: 800;
+}
+
+.wallpaper-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.wp-btn {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.wp-btn.active {
+  border-color: #ffd700;
+  color: #ffd700;
+  font-weight: 800;
+}
+
+.device-spec-box {
+  background: #181924;
+  border: 1px solid #292a3a;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.68rem;
+  line-height: 1.6;
+  color: #94a3b8;
+}
+
+/* ===================================================
+   CLASH ROYALE ARENA STYLES
+   =================================================== */
+.clash-royale-mini-engine {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #090d16;
+  color: #fff;
+}
+
+.cr-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: #020617;
+  border-bottom: 1.5px solid #1e293b;
+}
+
+.cr-back-home-btn {
+  background: #1e293b;
+  border: 1px solid #475569;
+  color: #38bdf8;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cr-crown-score {
+  display: flex;
+  gap: 10px;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.match-timer {
+  color: #ffd700;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.cr-battle-ticker {
+  background: #1e1b4b;
+  color: #a5b4fc;
+  font-size: 0.62rem;
+  padding: 3px 8px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom: 1px solid #312e81;
+}
+
+.cr-arena-field {
+  flex: 1;
+  position: relative;
+  background: radial-gradient(circle at center, #1b3a24 0%, #0d2114 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.cr-heheheha-popup {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);
+  border: 2px solid #ffd700;
+  border-radius: 12px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 80;
+  animation: kingLaughPop 0.25s ease-out;
+}
+
+@keyframes kingLaughPop {
+  0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+.towers-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+.cr-tower {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.tower-hp-bar {
+  width: 44px;
+  height: 6px;
+  background: #334155;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 2px;
+}
+
+.tower-hp-bar .hp-fill {
+  height: 100%;
+  background: #ef4444;
+  transition: width 0.2s;
+}
+
+.tower-hp-bar .hp-fill.blue {
+  background: #3b82f6;
+}
+
+.hp-text {
+  position: absolute;
+  inset: 0;
+  font-size: 0.45rem;
+  line-height: 6px;
+  text-align: center;
+  font-weight: 900;
+  color: #fff;
+}
+
+.tower-icon {
+  font-size: 1.4rem;
+}
+
+.cr-river-barrier {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 10px;
+  background: rgba(14, 116, 144, 0.5);
+  border-top: 1px solid #06b6d4;
+  border-bottom: 1px solid #06b6d4;
+}
+
+.cr-bridge {
+  background: #78350f;
+  border: 1px solid #d97706;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.cr-bridge:hover {
+  transform: scale(1.1);
+  background: #92400e;
+}
+
+.bridge-tag {
+  font-size: 0.58rem;
+  font-weight: 900;
+  color: #fef3c7;
+}
+
+.cr-river-water {
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+.cr-units-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cr-unit-token {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: top 0.4s linear;
+}
+
+.unit-mini-hp {
+  width: 20px;
+  height: 3px;
+  background: #111;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 1px;
+}
+
+.unit-hp-fill {
+  height: 100%;
+  background: #00ff80;
+}
+
+.unit-ico {
+  font-size: 1.2rem;
+}
+
+/* Эликсир шкала */
+.cr-elixir-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  background: #020617;
+  border-top: 1px solid #1e293b;
+}
+
+.cr-elixir-meter {
+  flex: 1;
+  height: 10px;
+  background: #1e1b4b;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.elixir-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #d946ef 0%, #a855f7 100%);
+  transition: width 0.3s;
+}
+
+.elixir-ticks {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2px;
+}
+
+.elixir-ticks .tick {
+  width: 1px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.elixir-counter {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 900;
+  font-size: 0.75rem;
+  color: #e879f9;
+}
+
+.cr-cards-dock {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #020617;
+  padding: 6px;
+}
+
+.cr-king-laugh-btn, .cr-rematch-btn {
+  background: #1e293b;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  padding: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.cr-deck-slots {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.cr-card-slot {
+  flex: 1;
+  background: #1e293b;
+  border: 1.5px solid #3b82f6;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s;
+}
+
+.cr-card-slot.selected {
+  border-color: #ffd700;
+  background: #2e384d;
+  transform: translateY(-4px);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+.cr-card-slot.unaffordable {
+  opacity: 0.45;
+  filter: grayscale(0.5);
+}
+
+.cr-card-cost {
+  position: absolute;
+  top: -4px;
+  left: -2px;
+  background: #d946ef;
+  color: #fff;
+  font-size: 0.52rem;
+  font-weight: 900;
+  padding: 1px 3px;
+  border-radius: 3px;
+}
+
+.cr-card-icon {
+  font-size: 1.05rem;
+  margin-top: 2px;
+}
+
+.cr-card-name {
+  font-size: 0.46rem;
+  color: #cbd5e1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 40px;
+}
+
+/* ФИЗИЧЕСКАЯ КНОПКА HOME ВНИЗУ ТЕЛЕФОНА */
+.iphone-home-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #1d1d20;
+  border: 2px solid #a1a1aa; /* Touch ID Ring */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: transform 0.1s, box-shadow 0.2s;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.8);
+}
+
+.iphone-home-button:hover {
+  border-color: #ffd700;
+  box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);
+}
+
+.iphone-home-button:active {
+  transform: scale(0.92);
+}
+
+.touch-id-ring {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}

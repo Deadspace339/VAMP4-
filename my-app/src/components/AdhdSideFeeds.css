@@ -1,0 +1,285 @@
+/* ===================================================
+   ADHD / СДВГ MODE SIDEBAR FEEDS
+   4 зацикленных видео (мыло, сабвей, ковер, гриффины)
+   =================================================== */
+
+.adhd-global-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 99999;
+}
+
+.adhd-side-dock {
+  position: fixed;
+  top: 76px;
+  bottom: 16px;
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: auto;
+  z-index: 100000;
+  animation: dockSlideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.adhd-side-dock.left-dock {
+  left: 12px;
+}
+
+.adhd-side-dock.right-dock {
+  right: 12px;
+}
+
+@keyframes dockSlideIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.adhd-dock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10, 10, 14, 0.92);
+  border: 1px solid rgba(255, 85, 0, 0.4);
+  border-radius: 8px;
+  padding: 5px 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+}
+
+.adhd-dock-title {
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #ff5500;
+  letter-spacing: 0.5px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.adhd-dock-status {
+  font-size: 0.65rem;
+  font-weight: 900;
+  color: #ff3344;
+  background: rgba(255, 51, 68, 0.2);
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid #ff3344;
+}
+
+.adhd-video-card {
+  flex: 1;
+  max-height: calc(50% - 24px);
+  background: #09090c;
+  border: 1.5px solid rgba(255, 85, 0, 0.35);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), 0 0 12px rgba(255, 85, 0, 0.15);
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.adhd-video-card:hover {
+  border-color: #ff5500;
+  box-shadow: 0 8px 25px rgba(255, 85, 0, 0.4);
+  transform: scale(1.02);
+}
+
+.adhd-card-hud-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: rgba(18, 18, 22, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.adhd-card-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #ffd700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adhd-hud-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 60%;
+  overflow: hidden;
+}
+
+.adhd-hud-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.adhd-hud-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 0.6rem;
+  padding: 1px 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  text-decoration: none;
+  line-height: 1.2;
+  transition: all 0.15s ease;
+}
+
+.adhd-hud-btn:hover {
+  background: rgba(255, 85, 0, 0.3);
+  border-color: #ff5500;
+  color: #ffaa00;
+}
+
+.adhd-hud-btn.icon-only {
+  padding: 1px 4px;
+  font-size: 0.68rem;
+  color: #aaa;
+}
+
+.adhd-hud-btn.icon-only:hover {
+  color: #fff;
+}
+
+.adhd-hud-btn.sound-toggle-btn {
+  padding: 1px 4px;
+  font-size: 0.65rem;
+}
+
+.adhd-hud-btn.sound-toggle-btn.active {
+  background: rgba(0, 255, 102, 0.25);
+  border-color: #00ff66;
+  color: #00ff66;
+  box-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
+}
+
+.adhd-counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  color: #ffaa00;
+  font-weight: 700;
+}
+
+.adhd-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #00ff66;
+  box-shadow: 0 0 6px #00ff66;
+  animation: blinkDot 1s infinite alternate;
+  margin-left: 2px;
+}
+
+@keyframes blinkDot {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+.adhd-video-viewport {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: #000;
+}
+
+.adhd-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  pointer-events: auto;
+}
+
+/* Стили кнопки переключения СДВГ в шапке */
+.adhd-header-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(18, 18, 24, 0.85);
+  border: 1px solid rgba(255, 85, 0, 0.4);
+  border-radius: 20px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+  font-family: inherit;
+  margin: 0 10px;
+}
+
+.adhd-header-toggle-btn:hover {
+  border-color: #ff5500;
+  box-shadow: 0 0 15px rgba(255, 85, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.adhd-header-toggle-btn.is-active {
+  background: linear-gradient(135deg, rgba(255, 85, 0, 0.25), rgba(255, 34, 0, 0.15));
+  border-color: #ff5500;
+  box-shadow: 0 0 20px rgba(255, 85, 0, 0.6);
+}
+
+.adhd-brain-emoji {
+  font-size: 1.1rem;
+  line-height: 1;
+  animation: brainBounce 2s infinite ease-in-out;
+}
+
+@keyframes brainBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15) rotate(5deg); }
+}
+
+.adhd-toggle-text {
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+
+.adhd-header-toggle-btn.is-active .adhd-toggle-text {
+  color: #ffaa00;
+}
+
+.adhd-status-badge {
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+
+.adhd-status-badge.on {
+  background: #00ff66;
+  color: #000;
+  box-shadow: 0 0 8px #00ff66;
+}
+
+.adhd-status-badge.off {
+  background: #2a2a30;
+  color: #777;
+}
+
+@media (max-width: 1540px) {
+  .adhd-side-dock {
+    width: 175px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .adhd-side-dock {
+    display: none;
+  }
+}

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <!-- Background radial gold-green glow -->
+    <radialGradient id="badgeGlow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#22cc55" />
+      <stop offset="60%" stop-color="#0f8833" />
+      <stop offset="100%" stop-color="#054415" />
+    </radialGradient>
+
+    <!-- Gold border gradient -->
+    <linearGradient id="goldRim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff8cc" />
+      <stop offset="35%" stop-color="#ffd700" />
+      <stop offset="70%" stop-color="#d48800" />
+      <stop offset="100%" stop-color="#fff0aa" />
+    </linearGradient>
+
+    <!-- 5+ text gradient -->
+    <linearGradient id="textGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#fff275" />
+      <stop offset="100%" stop-color="#ffa500" />
+    </linearGradient>
+
+    <!-- Drop shadow filter -->
+    <filter id="badgeShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.65" />
+      <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="#00ff66" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <g filter="url(#badgeShadow)">
+    <!-- Laurel Wreath behind badge -->
+    <g fill="#ffd700" opacity="0.9">
+      <!-- Left wreath leaves -->
+      <path d="M 45 130 C 35 110 32 85 46 65 C 40 75 42 95 55 105 Z" />
+      <path d="M 38 100 C 24 85 25 65 38 48 C 34 60 38 78 50 86 Z" />
+      <path d="M 42 68 C 30 52 38 35 52 24 C 47 36 52 52 64 58 Z" />
+      <!-- Right wreath leaves -->
+      <path d="M 155 130 C 165 110 168 85 154 65 C 160 75 158 95 145 105 Z" />
+      <path d="M 162 100 C 176 85 175 65 162 48 C 166 60 162 78 150 86 Z" />
+      <path d="M 158 68 C 170 52 162 35 148 24 C 153 36 148 52 136 58 Z" />
+    </g>
+
+    <!-- Outer Gold Scalloped Ring -->
+    <circle cx="100" cy="100" r="76" fill="url(#goldRim)" />
+    <!-- Inner Dark Trim -->
+    <circle cx="100" cy="100" r="70" fill="#08280f" />
+    <!-- Main Green Medallion -->
+    <circle cx="100" cy="100" r="66" fill="url(#badgeGlow)" />
+
+    <!-- Inner Golden Circle Outline -->
+    <circle cx="100" cy="100" r="60" fill="none" stroke="#ffd700" stroke-width="2" stroke-dasharray="4 2" opacity="0.75" />
+
+    <!-- 5 Golden Stars arched over top -->
+    <g fill="#ffd700" stroke="#b37700" stroke-width="0.5">
+      <!-- Star 1 -->
+      <polygon points="62,60 65,66 72,66 67,70 69,76 62,72 56,76 58,70 53,66 60,66" transform="scale(0.65) translate(30, 20)" />
+      <!-- Star 2 -->
+      <polygon points="80,48 83,54 90,54 85,58 87,64 80,60 74,64 76,58 71,54 78,54" transform="scale(0.7) translate(32, 10)" />
+      <!-- Center Star 3 (biggest) -->
+      <polygon points="100,42 104,50 113,50 106,55 109,63 100,58 91,63 94,55 87,50 96,50" transform="scale(0.8) translate(25, 0)" />
+      <!-- Star 4 -->
+      <polygon points="120,48 123,54 130,54 125,58 127,64 120,60 114,64 116,58 111,54 118,54" transform="scale(0.7) translate(22, 10)" />
+      <!-- Star 5 -->
+      <polygon points="138,60 141,66 148,66 143,70 145,76 138,72 132,76 134,70 129,66 136,66" transform="scale(0.65) translate(24, 20)" />
+    </g>
+
+    <!-- Main Bold "5+" Text in Odnoklassniki style -->
+    <text x="76" y="132" font-family="'Arial Black', 'Impact', sans-serif" font-size="78" font-weight="900" fill="url(#textGold)" stroke="#663300" stroke-width="4" text-anchor="middle">5</text>
+    <text x="134" y="112" font-family="'Arial Black', 'Impact', sans-serif" font-size="54" font-weight="900" fill="url(#textGold)" stroke="#663300" stroke-width="3" text-anchor="middle">+</text>
+
+    <!-- Shiny gloss highlight reflection -->
+    <path d="M 46 80 C 55 52 80 40 120 42 C 90 48 65 65 52 90 Z" fill="#ffffff" opacity="0.35" />
+    
+    <!-- Red bottom ribbon banner: "ОТЛИЧНО" / "СВЭГ" -->
+    <g transform="translate(0, 5)">
+      <path d="M 45 152 L 155 152 L 145 168 L 155 184 L 45 184 L 55 168 Z" fill="#cc1100" stroke="#ffd700" stroke-width="1.5" />
+      <text x="100" y="172" font-family="'Arial Black', sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="2">★ 5 С ПЛЮСОМ ★</text>
+    </g>
+  </g>
+</svg>
