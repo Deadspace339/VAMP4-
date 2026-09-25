@@ -513,8 +513,8 @@ const ProfilePage = ({ balance, onMint }) => {
 
   const handlePasswordUpdate = async (e) => {
     e?.preventDefault();
-    if (!newPassword || newPassword.length < 2) {
-      showToast('❌ Новый пароль должен быть не короче 2 символов!');
+    if (!newPassword || newPassword.length < 6) {
+      showToast('❌ Новый пароль должен быть не короче 6 символов!');
       return;
     }
     if (newPassword !== confirmPassword) {

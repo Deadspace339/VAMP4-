@@ -71,8 +71,8 @@ const AuthPage = () => {
       showToast('Укажите желаемый кибер-никнейм!');
       return;
     }
-    if (!regPass.trim()) {
-      showToast('Укажите надежный пароль для E2EE защиты!');
+    if (!regPass.trim() || regPass.trim().length < 6) {
+      showToast('Пароль должен содержать минимум 6 символов для E2EE защиты!');
       return;
     }
 
@@ -82,35 +82,44 @@ const AuthPage = () => {
         handle: regNick.trim(),
         email: regEmail.trim(),
         password: regPass,
-        role: 'FOUNDER',
-        rank: 'SWAG GOD',
+        role: 'CREATOR',
+        rank: 'SOUND CREATOR',
         avatarHat: 'crown'
       });
       setPostAuthUser(res.user);
-      setSelectedRole('FOUNDER');
+      setSelectedRole(res.user.role || 'CREATOR');
       setSelectedHat('crown');
-      showToast('👑 Узел зарегистрирован в сети Сомали! Выберите ваши права.');
+      showToast('⚡ Узел зарегистрирован в защищённой сети! Выберите ваши права.');
     } catch (err) {
       showToast(`❌ Ошибка регистрации: ${err.message}`);
     }
   };
 
+  // Проверяем, является ли текущий пользователь настоящим FOUNDER
+  const isActualFounder = postAuthUser?.handle === '@macansssssssssss1337' || postAuthUser?.role === 'FOUNDER';
+
   const handleConfirmRole = () => {
     if (!postAuthUser) return;
+
+    // ЗАЩИТА: sanitize роль — не-основатели не могут выбрать FOUNDER
+    let safeRole = selectedRole;
+    if (safeRole === 'FOUNDER' && !isActualFounder) {
+      safeRole = 'CREATOR';
+    }
 
     backendService.updateProfile({
       name: postAuthUser.name,
       handle: postAuthUser.handle,
       email: postAuthUser.email || undefined,
-      role: selectedRole,
-      rank: ROLE_RANKS[selectedRole] || 'SWAG GOD',
+      role: safeRole,
+      rank: ROLE_RANKS[safeRole] || 'SOUND CREATOR',
       avatarHat: selectedHat
     });
 
     // Воспроизведение трека «свэг321.mp3» после выбора роли и входа (строго 1 раз без цикла)
     soundService.playAfterAuth();
 
-    showToast(`🔥 Роль ${selectedRole} активирована! Доступ открыт.`);
+    showToast(`🔥 Роль ${safeRole} активирована! Доступ открыт.`);
     setTimeout(() => {
       navigate('/');
     }, 1000);
@@ -236,7 +245,7 @@ const AuthPage = () => {
                   value={selectedRole} 
                   onChange={(e) => setSelectedRole(e.target.value)}
                 >
-                  <option value="FOUNDER">👑 FOUNDER (Создатель платформы • Эмиссия монет)</option>
+                  {isActualFounder && <option value="FOUNDER">👑 FOUNDER (Создатель платформы • Эмиссия монет)</option>}
                   <option value="CREATOR">🎵 CREATOR (Автор музыки и клипов Shorts)</option>
                   <option value="HIGH_ROLLER">🎰 HIGH ROLLER (VIP Игрок Казино 777)</option>
                   <option value="SWAG_BOSS">⚡ SWAG BOSS (Авторитетный узел • Web 3.0 Доступ)</option>

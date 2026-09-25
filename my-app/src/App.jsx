@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { db } from './services/db';
+import { backendService } from './services/backendService';
 import { soundService } from './services/soundService';
 import SiteHeader from './components/SiteHeader';
 import AdhdSideFeeds from './components/AdhdSideFeeds';
@@ -11,6 +12,18 @@ import Web4Page from './pages/Web4Page';
 import AuthPage from './pages/AuthPage';
 import ProfilePage from './pages/ProfilePage';
 import IPhoneClashRoyale from './components/iphone/IPhoneClashRoyale';
+
+// ===================================================
+// ЗАЩИТА МАРШРУТОВ: RequireAuth
+// Перенаправляет на /auth если пользователь не авторизован
+// ===================================================
+const RequireAuth = ({ children }) => {
+  const hasSession = backendService.isSessionValid();
+  if (!hasSession) {
+    return <Navigate to="/auth" replace />;
+  }
+  return children;
+};
 
 const AppContent = () => {
   const [balance, setBalance] = useState(() => db.getBalance());
@@ -81,7 +94,14 @@ const AppContent = () => {
     handleUpdateBalance(-amount);
   };
 
+  // ЗАЩИТА: Минт доступен только для FOUNDER
   const handleMint = (amount = 1000) => {
+    const user = db.getUser();
+    const isFounder = user?.role === 'FOUNDER' || user?.rank === 'SWAG GOD' || user?.handle === '@macansssssssssss1337';
+    if (!isFounder) {
+      console.warn('[Security] Mint attempt blocked: user is not FOUNDER');
+      return;
+    }
     handleUpdateBalance(amount);
   };
 
@@ -102,13 +122,14 @@ const AppContent = () => {
         <Route path="/marketplace" element={<MarketplaceBody />} />
         <Route path="/2" element={<Web2Page balance={balance} onDonate={handleDonate} />} />
         <Route path="/messenger" element={<Web2Page balance={balance} onDonate={handleDonate} />} />
-        <Route path="/3" element={<Web3Page />} />
-        <Route path="/4" element={<Web4Page balance={balance} onUpdateBalance={handleUpdateBalance} />} />
-        <Route path="/casino" element={<Web4Page balance={balance} onUpdateBalance={handleUpdateBalance} />} />
+        {/* ЗАЩИЩЁННЫЕ МАРШРУТЫ — требуют авторизации */}
+        <Route path="/3" element={<RequireAuth><Web3Page /></RequireAuth>} />
+        <Route path="/4" element={<RequireAuth><Web4Page balance={balance} onUpdateBalance={handleUpdateBalance} /></RequireAuth>} />
+        <Route path="/casino" element={<RequireAuth><Web4Page balance={balance} onUpdateBalance={handleUpdateBalance} /></RequireAuth>} />
+        <Route path="/profile" element={<RequireAuth><ProfilePage balance={balance} onMint={handleMint} /></RequireAuth>} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/login" element={<AuthPage />} />
         <Route path="/register" element={<AuthPage />} />
-        <Route path="/profile" element={<ProfilePage balance={balance} onMint={handleMint} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 

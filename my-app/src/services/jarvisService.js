@@ -1,6 +1,8 @@
 // ===================================================
 // J.A.R.V.I.S. NEURAL CORE (GEMINI 2.5 FLASH + WEB SEARCH)
 // Сверхбыстрый ИИ с выходом в интернет и строгим лимитом токенов
+// ЗАЩИТА: API ключ НЕ хранится в клиентском коде
+// Все запросы идут через серверный прокси /api/jarvis
 // ===================================================
 
 const SYSTEM_PROMPT = `Ты — J.A.R.V.I.S. (Джарвис), персональный сверхмощный кибер-ИИ платформы SWAG INC. и личный советник Создателя («Папа»).
@@ -13,9 +15,6 @@ const SYSTEM_PROMPT = `Ты — J.A.R.V.I.S. (Джарвис), персонал�
 Если вопрос касается актуальных событий, фактов, погоды или новостей вне базы SWAG INC., используй свой встроенный поиск в интернете (Google Search) и давай свежий ответ.`;
 
 export async function askJarvis(userText, history = [], audioData = null) {
-  const apiKey = import.meta.env.VITE_JARVIS_API_KEY;
-  const model = import.meta.env.VITE_JARVIS_MODEL || 'gemini-2.5-flash';
-
   const userParts = [];
   if (audioData && typeof audioData === 'string' && audioData.includes('base64,')) {
     try {
@@ -36,87 +35,93 @@ export async function askJarvis(userText, history = [], audioData = null) {
     text: userText || (audioData ? 'Прослушай голосовое сообщение сэра и ответь на него как кибер-дворецкий Джарвис.' : 'Папа дома?')
   });
 
-  if (apiKey && apiKey.trim() && apiKey.trim() !== 'YOUR_API_KEY_HERE') {
-    const contents = [
-      ...history.slice(-4).map(m => ({
-        role: m.isMe ? 'user' : 'model',
-        parts: [{ text: m.text || (m.transcript ? `[Голосовое]: ${m.transcript}` : '') }]
-      })),
-      { role: 'user', parts: userParts }
-    ];
+  const contents = [
+    ...history.slice(-4).map(m => ({
+      role: m.isMe ? 'user' : 'model',
+      parts: [{ text: m.text || (m.transcript ? `[Голосовое]: ${m.transcript}` : '') }]
+    })),
+    { role: 'user', parts: userParts }
+  ];
 
-    // Попытка 1: С доступом в интернет через Google Search Grounding Tool
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: contents,
-            systemInstruction: {
-              parts: [{ text: SYSTEM_PROMPT }]
-            },
-            tools: [
-              {
-                googleSearch: {}
-              }
-            ],
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 200 // Строгий лимит расхода токенов
-            }
-          })
+  // ===================================================
+  // ПОПЫТКА 1: Серверный прокси /api/jarvis (БЕЗОПАСНО)
+  // API ключ хранится только на сервере Vercel
+  // ===================================================
+  try {
+    const proxyResponse = await fetch('/api/jarvis', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents,
+        systemInstruction: {
+          parts: [{ text: SYSTEM_PROMPT }]
+        },
+        tools: [{ googleSearch: {} }],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 200
         }
-      );
+      })
+    });
 
-      if (response.ok) {
-        const data = await response.json();
-        const candidate = data.candidates?.[0];
-        const answer = candidate?.content?.parts?.[0]?.text;
-        if (answer) {
-          return answer.trim();
-        }
-      } else {
-        console.warn(`[Jarvis] Web search tool HTTP ${response.status}, attempting standard model generation...`);
+    if (proxyResponse.ok) {
+      const data = await proxyResponse.json();
+      const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (answer) {
+        return answer.trim();
       }
-    } catch (err) {
-      console.warn('[Jarvis] Grounded search query failed:', err);
+    } else {
+      const errData = await proxyResponse.json().catch(() => ({}));
+      console.warn(`[Jarvis] Proxy returned ${proxyResponse.status}:`, errData);
+      // Если прокси вернул fallback: true, используем локальные ответы
     }
+  } catch (err) {
+    console.warn('[Jarvis] Proxy request failed:', err);
+  }
 
-    // Попытка 2: Стандартная генерация без tools (если Google Search tool не поддержан ключом)
-    try {
-      const responseFallback = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: contents,
-            systemInstruction: {
-              parts: [{ text: SYSTEM_PROMPT }]
-            },
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 200 // Строгий лимит токенов
-            }
-          })
-        }
-      );
+  // ===================================================
+  // ПОПЫТКА 2: Прямой вызов API (только для локальной разработки)
+  // Использует VITE_ переменную ТОЛЬКО в dev режиме
+  // В продакшене этот код не выполнится т.к. прокси выше сработает
+  // ===================================================
+  if (import.meta.env.DEV) {
+    const devApiKey = import.meta.env.VITE_JARVIS_API_KEY;
+    const model = import.meta.env.VITE_JARVIS_MODEL || 'gemini-2.5-flash';
 
-      if (responseFallback.ok) {
-        const data = await responseFallback.json();
-        const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (answer) {
-          return answer.trim();
+    if (devApiKey && devApiKey.trim() && devApiKey.trim() !== 'YOUR_API_KEY_HERE') {
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${devApiKey.trim()}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents,
+              systemInstruction: {
+                parts: [{ text: SYSTEM_PROMPT }]
+              },
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 200
+              }
+            })
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (answer) return answer.trim();
         }
+      } catch (fallbackErr) {
+        console.warn('[Jarvis] Dev API call failed:', fallbackErr);
       }
-    } catch (fallbackErr) {
-      console.warn('[Jarvis] Standard generation error:', fallbackErr);
     }
   }
 
-  // Fallback (локальные кибер-ответы, если API недоступен или нет сети)
+  // ===================================================
+  // FALLBACK: Локальные кибер-ответы (без API)
+  // ===================================================
   const isVoice = Boolean(audioData || userText.includes('[ГОЛОСОВОЕ') || userText.includes('голосовое'));
   const query = userText.toLowerCase();
   const voicePrefix = isVoice ? '🎙️ [Голос распознан]: ' : '';
