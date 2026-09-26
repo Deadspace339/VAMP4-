@@ -1,14 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ChatList from '../components/messenger/ChatList';
 import ChatWindow from '../components/messenger/ChatWindow';
 import ShortsFeed from '../components/messenger/ShortsFeed';
 import { askJarvis } from '../services/jarvisService';
 import { db } from '../services/db';
+import { backendService } from '../services/backendService';
 
 const Web2Page = ({ onDonate }) => {
-  const [viewMode, setViewMode] = useState('messenger'); // 'messenger', 'split', 'shorts'
-  const [chats, setChats] = useState(() => db.getChats());
+  const [viewMode, setViewMode] = useState('messenger');
+  const [chats, setChats] = useState([]);
   const [activeChatId, setActiveChatId] = useState('jarvis');
+  const [loading, setLoading] = useState(true);
+
+  // Загрузка чатов с СЕРВЕРА (привязаны к аккаунту!)
+  useEffect(() => {
+    const loadChats = async () => {
+      try {
+        const serverChats = await backendService.getChats();
+        if (serverChats && serverChats.length > 0) {
+          setChats(serverChats);
+          // Кешируем локально для быстрого доступа
+          db.saveChats(serverChats);
+        } else {
+          // Fallback на локальные чаты
+          setChats(db.getChats());
+        }
+      } catch (e) {
+        console.warn('[Web2] Server chats failed, using local:', e);
+        setChats(db.getChats());
+      }
+      setLoading(false);
+    };
+    loadChats();
+  }, []);
 
   const activeChat = chats.find(c => c.id === activeChatId) || chats[0];
 
@@ -16,15 +40,34 @@ const Web2Page = ({ onDonate }) => {
     setActiveChatId(id);
     const updated = chats.map(c => c.id === id ? { ...c, unread: 0 } : c);
     setChats(updated);
-    db.saveChats(updated);
   };
 
-  // Отправка сообщения с вызовом нейросети Джарвиса и записью в БД
+  // Отправка сообщения — сохраняем на сервер + обновляем локально
   const handleSendMessage = async (chatId, newMsg) => {
-    const updatedChats = db.addMessage(chatId, newMsg);
-    setChats(updatedChats);
+    // Сохраняем на сервер
+    try {
+      await backendService.sendMessage(chatId, newMsg);
+    } catch (e) {
+      console.warn('[Web2] Message save to server failed:', e);
+    }
 
-    // Вызов Gemini 2.5 Flash для чата с Джарвисом (с поддержкой распознавания голосовых)
+    // Обновляем локальное состояние
+    const updatedChats = chats.map(c => {
+      if (c.id === chatId) {
+        return {
+          ...c,
+          messages: [...(c.messages || []), newMsg],
+          lastMessage: newMsg.text || (newMsg.type === 'voice' ? '🎙️ Голосовое' : '📎 Файл'),
+          lastSender: newMsg.isMe ? 'Вы' : newMsg.sender,
+          time: newMsg.time
+        };
+      }
+      return c;
+    });
+    setChats(updatedChats);
+    db.saveChats(updatedChats);
+
+    // Вызов Gemini для чата с Джарвисом
     if (chatId === 'jarvis') {
       const chatObj = updatedChats.find(c => c.id === 'jarvis');
       const isVoice = newMsg.type === 'voice';
@@ -38,7 +81,7 @@ const Web2Page = ({ onDonate }) => {
         isVoice ? newMsg.audioSrc : null
       );
 
-      setTimeout(() => {
+      setTimeout(async () => {
         const replyMsg = {
           id: Date.now() + 1,
           sender: 'J.A.R.V.I.S.',
@@ -50,11 +93,32 @@ const Web2Page = ({ onDonate }) => {
           myReaction: null
         };
 
-        const savedWithJarvis = db.addMessage('jarvis', replyMsg);
-        setChats(savedWithJarvis);
+        // Сохраняем ответ Jarvis на сервер
+        try {
+          await backendService.sendMessage('jarvis', replyMsg);
+        } catch (e) {
+          console.warn('[Web2] Jarvis reply save failed:', e);
+        }
+
+        setChats(prev => {
+          const updated = prev.map(c => {
+            if (c.id === 'jarvis') {
+              return {
+                ...c,
+                messages: [...(c.messages || []), replyMsg],
+                lastMessage: replyMsg.text,
+                lastSender: 'J.A.R.V.I.S.',
+                time: replyMsg.time
+              };
+            }
+            return c;
+          });
+          db.saveChats(updated);
+          return updated;
+        });
       }, 700);
     } else if (chatId === 'macan') {
-      setTimeout(() => {
+      setTimeout(async () => {
         const textLower = ((newMsg?.text || newMsg?.transcript || '')).toLowerCase();
         let reply = '';
 
@@ -120,13 +184,34 @@ const Web2Page = ({ onDonate }) => {
           myReaction: null
         };
 
-        const savedWithMacan = db.addMessage('macan', replyMsg);
-        setChats(savedWithMacan);
+        // Сохраняем ответ MACAN на сервер
+        try {
+          await backendService.sendMessage('macan', replyMsg);
+        } catch (e) {
+          console.warn('[Web2] MACAN reply save failed:', e);
+        }
+
+        setChats(prev => {
+          const updated = prev.map(c => {
+            if (c.id === 'macan') {
+              return {
+                ...c,
+                messages: [...(c.messages || []), replyMsg],
+                lastMessage: replyMsg.text,
+                lastSender: 'MACAN',
+                time: replyMsg.time
+              };
+            }
+            return c;
+          });
+          db.saveChats(updated);
+          return updated;
+        });
       }, 1100);
     }
   };
 
-  // Реакции с защитой от дублирования через БД
+  // Реакции
   const handleToggleReaction = (chatId, messageId, emoji) => {
     const updated = db.toggleReaction(chatId, messageId, emoji);
     setChats(updated);
@@ -147,16 +232,26 @@ const Web2Page = ({ onDonate }) => {
     setChats(updated);
   };
 
+  if (loading) {
+    return (
+      <div className="web2-page-layout" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <div style={{ textAlign: 'center', color: '#00ff88', fontFamily: 'monospace' }}>
+          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💬</div>
+          <div>Загрузка чатов с сервера...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="web2-page-layout">
-      {/* Верхняя панель управления режимами */}
       <div className="web2-control-bar container">
         <div className="web2-status-tag">
           <span className="dot blink"></span>
           <span className="status-label">PROTOCOL:</span>
-          <span className="highlight">WEB 2.0 PERSISTENT HUB</span>
+          <span className="highlight">WEB 2.0 SERVER-SYNC</span>
           <span className="pipe">|</span>
-          <span className="crypto-enc">DATABASE: LOCAL-SYNC ACTIVE</span>
+          <span className="crypto-enc">DATABASE: SQLITE ACTIVE 🔒</span>
         </div>
 
         <div className="web2-mode-switchers">
@@ -184,9 +279,7 @@ const Web2Page = ({ onDonate }) => {
         </div>
       </div>
 
-      {/* Основная рабочая область */}
       <div className="web2-main-grid container">
-        {/* Блок Мессенджера */}
         {(viewMode === 'split' || viewMode === 'messenger') && (
           <div className={`web2-messenger-module ${viewMode === 'split' ? 'is-split' : 'is-full'}`}>
             <ChatList
@@ -205,7 +298,6 @@ const Web2Page = ({ onDonate }) => {
           </div>
         )}
 
-        {/* Блок Shorts Клипов */}
         {(viewMode === 'split' || viewMode === 'shorts') && (
           <div className={`web2-shorts-module ${viewMode === 'split' ? 'is-split' : 'is-full'}`}>
             <ShortsFeed onDonate={onDonate} />

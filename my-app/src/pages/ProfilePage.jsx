@@ -478,7 +478,7 @@ const ProfilePage = ({ balance, onMint }) => {
     showToast(`🖼️ Новая аватарка «${file.name}» выбрана!`);
   };
 
-  const handleSaveProfile = (e) => {
+  const handleSaveProfile = async (e) => {
     e?.preventDefault();
     if (!editName.trim()) {
       showToast('❌ Укажите имя профиля!');
@@ -496,19 +496,24 @@ const ProfilePage = ({ balance, onMint }) => {
       }
     }
 
-    const updated = backendService.updateProfile({
-      name: editName.trim().toUpperCase(),
-      handle: cleanHandle,
-      role: safeRole,
-      rank: safeRank,
-      level: Number(editLevel) || 67,
-      bio: editBio.trim(),
-      avatarHat: editAvatarHat,
-      avatar: editAvatarPreview
-    });
-    setUser(updated);
-    setRegisteredAccounts(backendService.getAccounts());
-    showToast('💾 Профиль успешно сохранен и синхронизирован с E2EE базой!');
+    try {
+      const updated = await backendService.updateProfile({
+        name: editName.trim().toUpperCase(),
+        handle: cleanHandle,
+        role: safeRole,
+        rank: safeRank,
+        level: Number(editLevel) || 67,
+        bio: editBio.trim(),
+        avatarHat: editAvatarHat,
+        avatar: editAvatarPreview
+      });
+      setUser(updated);
+      db.updateUser(updated);
+      setRegisteredAccounts(backendService.getAccounts());
+      showToast('💾 Профиль успешно сохранен и синхронизирован с базой!');
+    } catch (err) {
+      showToast(`❌ Ошибка сохранения: ${err.message}`);
+    }
   };
 
   const handlePasswordUpdate = async (e) => {
@@ -1608,13 +1613,27 @@ const ProfilePage = ({ balance, onMint }) => {
                   Управление вашим кибер-узлом, правами роли, шапкой аватарки и E2EE паролем в базе ATreiya.
                 </p>
               </div>
-              <button 
-                type="button" 
-                className="cyber-btn"
-                onClick={handleSaveProfile}
-              >
-                💾 СОХРАНИТЬ ПРОФИЛЬ
-              </button>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button 
+                  type="button" 
+                  className="cyber-btn"
+                  onClick={handleSaveProfile}
+                >
+                  💾 СОХРАНИТЬ ПРОФИЛЬ
+                </button>
+                <button 
+                  type="button" 
+                  className="cyber-btn"
+                  style={{ background: '#331111', borderColor: '#ff4444', color: '#ff6666' }}
+                  onClick={() => {
+                    backendService.logout();
+                    window.location.href = '/auth';
+                  }}
+                  title="Выйти из текущего аккаунта и перейти к авторизации"
+                >
+                  🚪 ВЫЙТИ
+                </button>
+              </div>
             </div>
 
             <div className="profile-edit-grid">

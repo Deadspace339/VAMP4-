@@ -56,10 +56,16 @@ const AuthPage = () => {
 
     try {
       const res = await backendService.login(loginNick, loginPass);
+      // Синхронизируем кеш db.js
+      db.updateUser({
+        name: res.user.name, handle: res.user.handle, email: res.user.email,
+        role: res.user.role, rank: res.user.rank, level: res.user.level,
+        bio: res.user.bio, avatarHat: res.user.avatar_hat, avatar: res.user.avatar
+      });
       setPostAuthUser(res.user);
-      setSelectedRole(res.user.role || 'FOUNDER');
-      setSelectedHat(res.user.avatarHat || 'crown');
-      showToast('⚡ Успешная авторизация в защищенной сети ATreiya! Подтвердите права.');
+      setSelectedRole(res.user.role || 'CREATOR');
+      setSelectedHat(res.user.avatar_hat || 'crown');
+      showToast('⚡ Успешная авторизация! Подтвердите права.');
     } catch (err) {
       showToast(`❌ Ошибка входа: ${err.message}`);
     }
@@ -98,7 +104,7 @@ const AuthPage = () => {
   // Проверяем, является ли текущий пользователь настоящим FOUNDER
   const isActualFounder = postAuthUser?.handle === '@macansssssssssss1337' || postAuthUser?.role === 'FOUNDER';
 
-  const handleConfirmRole = () => {
+  const handleConfirmRole = async () => {
     if (!postAuthUser) return;
 
     // ЗАЩИТА: sanitize роль — не-основатели не могут выбрать FOUNDER
@@ -107,16 +113,31 @@ const AuthPage = () => {
       safeRole = 'CREATOR';
     }
 
-    backendService.updateProfile({
-      name: postAuthUser.name,
-      handle: postAuthUser.handle,
-      email: postAuthUser.email || undefined,
-      role: safeRole,
-      rank: ROLE_RANKS[safeRole] || 'SOUND CREATOR',
-      avatarHat: selectedHat
-    });
+    try {
+      const updatedUser = await backendService.updateProfile({
+        name: postAuthUser.name,
+        role: safeRole,
+        rank: ROLE_RANKS[safeRole] || 'SOUND CREATOR',
+        avatar_hat: selectedHat
+      });
 
-    // Воспроизведение трека «свэг321.mp3» после выбора роли и входа (строго 1 раз без цикла)
+      // Синхронизируем кеш db.js
+      db.updateUser({
+        name: updatedUser.name, handle: updatedUser.handle,
+        role: updatedUser.role, rank: updatedUser.rank,
+        level: updatedUser.level, avatarHat: updatedUser.avatar_hat,
+        avatar: updatedUser.avatar
+      });
+
+      // Сообщаем App.jsx что пользователь вошёл
+      window.dispatchEvent(new CustomEvent('swag_user_logged_in', { detail: updatedUser }));
+    } catch (e) {
+      console.warn('[Auth] Profile update failed:', e);
+      // Всё равно пускаем внутрь — профиль можно обновить позже
+      window.dispatchEvent(new CustomEvent('swag_user_logged_in', { detail: postAuthUser }));
+    }
+
+    // Воспроизведение трека «свэг321.mp3» после выбора роли и входа
     soundService.playAfterAuth();
 
     showToast(`🔥 Роль ${safeRole} активирована! Доступ открыт.`);

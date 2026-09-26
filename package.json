@@ -5,6 +5,7 @@
   "scripts": {
     "build": "cd my-app && npm install && npm run build",
     "dev": "cd my-app && npm run dev",
+    "server": "cd server && npm start",
     "start": "cd my-app && npm run preview"
   }
 }

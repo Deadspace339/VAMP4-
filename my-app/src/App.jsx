@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { db } from './services/db';
 import { backendService } from './services/backendService';
 import { soundService } from './services/soundService';
@@ -14,21 +14,46 @@ import ProfilePage from './pages/ProfilePage';
 import IPhoneClashRoyale from './components/iphone/IPhoneClashRoyale';
 
 // ===================================================
-// ЗАЩИТА МАРШРУТОВ: RequireAuth
-// Перенаправляет на /auth если пользователь не авторизован
+// ЗАЩИТА МАРШРУТОВ
+// Проверяет авторизацию, если нет — редирект на /auth
 // ===================================================
-const RequireAuth = ({ children }) => {
-  const hasSession = backendService.isSessionValid();
-  if (!hasSession) {
+const RequireAuth = ({ children, authState }) => {
+  if (authState === 'loading') {
+    return (
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        height: '100vh', background: '#0a0a0a', color: '#00ff88',
+        fontFamily: 'monospace', fontSize: '1.2rem'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💀</div>
+          <div>SWAG INC. LOADING...</div>
+          <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.5rem' }}>Проверка защищённого соединения</div>
+        </div>
+      </div>
+    );
+  }
+  if (authState === 'unauthenticated') {
     return <Navigate to="/auth" replace />;
   }
   return children;
 };
 
-const AppContent = () => {
+const AppContent = ({ authState, currentUser, onLogout }) => {
   const [balance, setBalance] = useState(() => db.getBalance());
   const [adhdMode, setAdhdMode] = useState(() => db.getAdhdMode());
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // Синхронизация баланса с сервером при загрузке
+  useEffect(() => {
+    if (authState === 'authenticated') {
+      backendService.getBalance().then(data => {
+        setBalance(data.balance);
+        db.setBalance(data.balance);
+      }).catch(() => {});
+    }
+  }, [authState]);
 
   useEffect(() => {
     const handleAdhd = (e) => setAdhdMode(e.detail);
@@ -36,39 +61,41 @@ const AppContent = () => {
     return () => window.removeEventListener('swag_adhd_updated', handleAdhd);
   }, []);
 
-  // Проверяем, открыта ли страница авторизации/регистрации (скрываем все внешние панели)
+  // Слушаем событие истечения сессии
+  useEffect(() => {
+    const handleExpired = () => {
+      onLogout();
+      navigate('/auth');
+    };
+    window.addEventListener('swag_auth_expired', handleExpired);
+    return () => window.removeEventListener('swag_auth_expired', handleExpired);
+  }, [onLogout, navigate]);
+
   const isAuthPage = 
     location.pathname === '/auth' || 
     location.pathname === '/login' || 
     location.pathname === '/register';
 
-  // Главная страница SWAG INC.
   const isMainPage = 
     location.pathname === '/' || 
     location.pathname === '/marketplace' || 
     location.pathname === '/home';
 
-  // Воспроизведение трека «свэг321.mp3» ТОЛЬКО на странице Web 1.0 (главная/маркетплейс)
+  // Звук на главной
   useEffect(() => {
-    // На любых других страницах (Web 2.0, Web 3.0, Web 4.0, Profile, Auth) трек СТРОГО выключаем
     if (!isMainPage || isAuthPage) {
       soundService.stop();
       return;
     }
-
     if (isMainPage) {
       soundService.playOnMainPage();
-
-      // Если в браузере автоплей требует первого клика/действия пользователя
       const handleFirstAction = () => {
         soundService.playOnMainPage();
         window.removeEventListener('pointerdown', handleFirstAction);
         window.removeEventListener('keydown', handleFirstAction);
       };
-
       window.addEventListener('pointerdown', handleFirstAction, { once: true });
       window.addEventListener('keydown', handleFirstAction, { once: true });
-
       return () => {
         window.removeEventListener('pointerdown', handleFirstAction);
         window.removeEventListener('keydown', handleFirstAction);
@@ -76,33 +103,36 @@ const AppContent = () => {
     }
   }, [location.pathname, isMainPage, isAuthPage]);
 
-  // Слушаем обновления баланса из любых компонентов
+  // Слушаем обновления баланса
   useEffect(() => {
-    const handleBalanceUpdate = (e) => {
-      setBalance(e.detail);
-    };
+    const handleBalanceUpdate = (e) => setBalance(e.detail);
     window.addEventListener('swag_balance_updated', handleBalanceUpdate);
     return () => window.removeEventListener('swag_balance_updated', handleBalanceUpdate);
   }, []);
 
-  const handleUpdateBalance = (delta) => {
-    const newBal = db.addBalance(delta);
-    setBalance(newBal);
-  };
-
-  const handleDonate = (amount = 50) => {
-    handleUpdateBalance(-amount);
-  };
-
-  // ЗАЩИТА: Минт доступен только для FOUNDER
-  const handleMint = (amount = 1000) => {
-    const user = db.getUser();
-    const isFounder = user?.role === 'FOUNDER' || user?.rank === 'SWAG GOD' || user?.handle === '@macansssssssssss1337';
-    if (!isFounder) {
-      console.warn('[Security] Mint attempt blocked: user is not FOUNDER');
-      return;
+  const handleUpdateBalance = async (delta) => {
+    try {
+      const data = await backendService.addBalance(delta);
+      setBalance(data.balance);
+      db.setBalance(data.balance);
+    } catch {
+      // Fallback to local
+      const newBal = db.addBalance(delta);
+      setBalance(newBal);
     }
-    handleUpdateBalance(amount);
+  };
+
+  const handleDonate = (amount = 50) => handleUpdateBalance(-amount);
+
+  // ЗАЩИТА: Минт через сервер, только FOUNDER
+  const handleMint = async (amount = 1000) => {
+    try {
+      const data = await backendService.mintBalance(amount);
+      setBalance(data.balance);
+      db.setBalance(data.balance);
+    } catch (e) {
+      console.warn('[Security] Mint blocked:', e.message);
+    }
   };
 
   return (
@@ -110,33 +140,30 @@ const AppContent = () => {
       <div className="grain-overlay"></div>
       <div className="scanlines"></div>
       
-      {/* Шапка скрывается на странице регистрации/входа */}
       {!isAuthPage && <SiteHeader balance={balance} onMint={handleMint} />}
-
-      {/* ГЛОБАЛЬНЫЙ СДВГ РЕЖИМ (4 ЗАЦИКЛЕННЫХ ВИДЕО ПО БОКАМ ПОВЕРХ ВСЕХ СТРАНИЦ) */}
       {!isAuthPage && <AdhdSideFeeds active={adhdMode} />}
       
       <Routes>
-        <Route path="/" element={<MarketplaceBody />} />
-        <Route path="/home" element={<MarketplaceBody />} />
-        <Route path="/marketplace" element={<MarketplaceBody />} />
-        <Route path="/2" element={<Web2Page balance={balance} onDonate={handleDonate} />} />
-        <Route path="/messenger" element={<Web2Page balance={balance} onDonate={handleDonate} />} />
-        {/* ЗАЩИЩЁННЫЕ МАРШРУТЫ — требуют авторизации */}
-        <Route path="/3" element={<RequireAuth><Web3Page /></RequireAuth>} />
-        <Route path="/4" element={<RequireAuth><Web4Page balance={balance} onUpdateBalance={handleUpdateBalance} /></RequireAuth>} />
-        <Route path="/casino" element={<RequireAuth><Web4Page balance={balance} onUpdateBalance={handleUpdateBalance} /></RequireAuth>} />
-        <Route path="/profile" element={<RequireAuth><ProfilePage balance={balance} onMint={handleMint} /></RequireAuth>} />
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/register" element={<AuthPage />} />
+        {/* Публичные маршруты: если уже вошел — кидаем на главную, если нет — на страницу входа */}
+        <Route path="/auth" element={authState === 'authenticated' ? <Navigate to="/" replace /> : <AuthPage />} />
+        <Route path="/login" element={authState === 'authenticated' ? <Navigate to="/" replace /> : <AuthPage />} />
+        <Route path="/register" element={authState === 'authenticated' ? <Navigate to="/" replace /> : <AuthPage />} />
+
+        {/* Защищённые маршруты — требуют авторизации */}
+        <Route path="/" element={<RequireAuth authState={authState}><MarketplaceBody /></RequireAuth>} />
+        <Route path="/home" element={<RequireAuth authState={authState}><MarketplaceBody /></RequireAuth>} />
+        <Route path="/marketplace" element={<RequireAuth authState={authState}><MarketplaceBody /></RequireAuth>} />
+        <Route path="/2" element={<RequireAuth authState={authState}><Web2Page balance={balance} onDonate={handleDonate} /></RequireAuth>} />
+        <Route path="/messenger" element={<RequireAuth authState={authState}><Web2Page balance={balance} onDonate={handleDonate} /></RequireAuth>} />
+        <Route path="/3" element={<RequireAuth authState={authState}><Web3Page /></RequireAuth>} />
+        <Route path="/4" element={<RequireAuth authState={authState}><Web4Page balance={balance} onUpdateBalance={handleUpdateBalance} /></RequireAuth>} />
+        <Route path="/casino" element={<RequireAuth authState={authState}><Web4Page balance={balance} onUpdateBalance={handleUpdateBalance} /></RequireAuth>} />
+        <Route path="/profile" element={<RequireAuth authState={authState}><ProfilePage balance={balance} onMint={handleMint} /></RequireAuth>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
-      {/* МИНИ ТЕЛЕФОН IPHONE 6 С НАСТОЯЩИМ CLASH ROYALE */}
       {!isAuthPage && <IPhoneClashRoyale />}
 
-      {/* Футер скрывается на странице регистрации/входа */}
       {!isAuthPage && (
         <footer className="site-footer">
           <div className="container">
@@ -152,9 +179,66 @@ const AppContent = () => {
 };
 
 const App = () => {
+  const [authState, setAuthState] = useState('loading'); // 'loading' | 'authenticated' | 'unauthenticated'
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // При загрузке приложения проверяем сессию на сервере
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (!backendService.hasToken()) {
+        setAuthState('unauthenticated');
+        return;
+      }
+      try {
+        const user = await backendService.checkSession();
+        if (user) {
+          setCurrentUser(user);
+          setAuthState('authenticated');
+          // Обновляем кеш db.js
+          db.updateUser({
+            name: user.name,
+            handle: user.handle,
+            email: user.email,
+            role: user.role,
+            rank: user.rank,
+            level: user.level,
+            bio: user.bio,
+            avatarHat: user.avatar_hat,
+            avatar: user.avatar
+          });
+        } else {
+          setAuthState('unauthenticated');
+        }
+      } catch {
+        setAuthState('unauthenticated');
+      }
+    };
+    checkAuth();
+  }, []);
+
+  // Слушаем успешный логин из AuthPage
+  useEffect(() => {
+    const handleLogin = (e) => {
+      setCurrentUser(e.detail);
+      setAuthState('authenticated');
+    };
+    window.addEventListener('swag_user_logged_in', handleLogin);
+    return () => window.removeEventListener('swag_user_logged_in', handleLogin);
+  }, []);
+
+  const handleLogout = () => {
+    backendService.logout();
+    setCurrentUser(null);
+    setAuthState('unauthenticated');
+  };
+
   return (
     <BrowserRouter>
-      <AppContent />
+      <AppContent 
+        authState={authState} 
+        currentUser={currentUser} 
+        onLogout={handleLogout}
+      />
     </BrowserRouter>
   );
 };

@@ -1,6 +1,10 @@
 # Dependencies
 node_modules/
 my-app/node_modules/
+server/node_modules/
+
+# Database
+server/data/
 
 # Production Build
 dist/
