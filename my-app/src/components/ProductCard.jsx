@@ -1,4 +1,5 @@
 import React from 'react';
+import { handleImageError } from '../utils/cyberImages';
 
 const ProductCard = ({ product, onClick, onBuy }) => {
   if (!product) return null;
@@ -22,10 +23,7 @@ const ProductCard = ({ product, onClick, onBuy }) => {
             alt={product.title} 
             className="product-card__img" 
             loading="lazy"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&auto=format&fit=crop&q=80';
-            }}
+            onError={(e) => handleImageError(e, 'product', product.title)}
           />
         ) : (
           <div className="product-card__placeholder">💾</div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { db } from '../../services/db';
 import { backendService } from '../../services/backendService';
+import { handleImageError, resolveAvatar } from '../../utils/cyberImages';
 
 const HYPE_TAGS = [
   '#Все',
@@ -278,7 +279,12 @@ const ChatList = ({ chats, activeChatId, onSelectChat }) => {
               return (
                 <div key={user.id} className="chat-network-user-card">
                   <div className="cnuc-avatar-box">
-                    <img src={user.avatar} alt={user.name} className="cnuc-avatar" />
+                    <img 
+                      src={resolveAvatar(user.avatar, user.name)} 
+                      alt="" 
+                      className="cnuc-avatar" 
+                      onError={(e) => handleImageError(e, 'avatar', user.name)} 
+                    />
                     {user.online && <span className="online-badge-dot"></span>}
                   </div>
 
@@ -347,7 +353,12 @@ const ChatList = ({ chats, activeChatId, onSelectChat }) => {
               onClick={() => onSelectChat(chat.id)}
             >
               <div className="chat-item-avatar-wrapper">
-                <img src={chat.avatar} alt={chat.name} className="chat-item-avatar" />
+                <img 
+                  src={resolveAvatar(chat.avatar, chat.name)} 
+                  alt="" 
+                  className="chat-item-avatar" 
+                  onError={(e) => handleImageError(e, 'avatar', chat.name)}
+                />
                 {chat.online && <span className="online-badge-dot"></span>}
                 {chat.isBot && <span className="bot-tag">AI</span>}
               </div>
@@ -475,7 +486,12 @@ const ChatList = ({ chats, activeChatId, onSelectChat }) => {
                 return (
                   <div key={user.id} className="hype-user-card">
                     <div className="huc-avatar-wrap">
-                      <img src={user.avatar} alt={user.name} className="huc-avatar" />
+                      <img 
+                        src={resolveAvatar(user.avatar, user.name)} 
+                        alt="" 
+                        className="huc-avatar" 
+                        onError={(e) => handleImageError(e, 'avatar', user.name)}
+                      />
                       {user.online && <span className="online-badge-dot"></span>}
                     </div>
 

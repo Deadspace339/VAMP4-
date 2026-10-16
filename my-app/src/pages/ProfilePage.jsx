@@ -9,6 +9,7 @@ import crownImg from '../assets/plashka.png';
 import shieldImg from '../assets/plashka2.png';
 import fivePlusImg from '../assets/five_plus.svg';
 import okHatImg from '../assets/odnoklassniki_hat.svg';
+import { resolveAvatar } from '../utils/cyberImages';
 
 const ProfilePage = ({ balance, onMint }) => {
   const navigate = useNavigate();
@@ -302,7 +303,7 @@ const ProfilePage = ({ balance, onMint }) => {
       id: clipId,
       author: currentUser?.handle || '@macan',
       authorName: currentUser?.name || 'SWAG CREATOR',
-      authorAvatar: '/src/assets/macan-brat.jpg',
+      authorAvatar: macanImg,
       description: studioDesc.trim() || studioTitle.trim(),
       soundTitle: studioSound.trim() || 'Оригинальный звук',
       videoSrc: studioMediaType === 'video' ? studioMedia : null,
@@ -518,8 +519,12 @@ const ProfilePage = ({ balance, onMint }) => {
 
   const handlePasswordUpdate = async (e) => {
     e?.preventDefault();
-    if (!newPassword || newPassword.length < 6) {
-      showToast('❌ Новый пароль должен быть не короче 6 символов!');
+    if (!newPassword || newPassword.length < 8) {
+      showToast('❌ Новый пароль должен быть не короче 8 символов!');
+      return;
+    }
+    if (!/[0-9]/.test(newPassword) || !/[a-zA-Zа-яА-ЯёЁ]/.test(newPassword)) {
+      showToast('❌ Пароль должен содержать как минимум одну букву и одну цифру!');
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -659,7 +664,12 @@ const ProfilePage = ({ balance, onMint }) => {
           {/* Аватарка с выбранной шапкой (Корона, 5+, Одноклассники) */}
           <div className="tiktok-avatar-column">
             <div className="tiktok-avatar-frame">
-              <img src={user.avatar || macanImg} alt="Avatar" className="tiktok-avatar-img" />
+              <img 
+                src={resolveAvatar(user.avatar)} 
+                alt="" 
+                className="tiktok-avatar-img" 
+                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = macanImg; }}
+              />
               {(!user.avatarHat || user.avatarHat === 'crown') && (
                 <img src={crownImg} alt="Корона" className="tiktok-avatar-crown" title="Корона Создателя" />
               )}
@@ -1393,7 +1403,12 @@ const ProfilePage = ({ balance, onMint }) => {
                     <div className={`vinyl-3d-disc ${letnikPlaying ? 'spinning' : ''}`}>
                       <div className="vinyl-ridges"></div>
                       <div className="vinyl-center-art">
-                        <img src={user.avatar || macanImg} alt="Macan" className="vinyl-art-pic" />
+                        <img 
+                          src={resolveAvatar(user?.avatar)} 
+                          alt="" 
+                          className="vinyl-art-pic" 
+                          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = macanImg; }}
+                        />
                         <div className="vinyl-spindle-hole"></div>
                       </div>
                     </div>
@@ -1745,7 +1760,12 @@ const ProfilePage = ({ balance, onMint }) => {
 
                 <div className="edit-avatar-preview-box">
                   <div className="eap-frame">
-                    <img src={editAvatarPreview || macanImg} alt="Avatar" className="eap-img" />
+                    <img 
+                      src={resolveAvatar(editAvatarPreview)} 
+                      alt="" 
+                      className="eap-img" 
+                      onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = macanImg; }}
+                    />
                     {editAvatarHat === 'crown' && (
                       <img src={crownImg} alt="Корона" className="eap-hat hat-crown" />
                     )}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../services/db';
 import ProductCard from './ProductCard';
+import { handleImageError } from '../utils/cyberImages';
 
 const CATEGORIES = ['Все', 'Одежда', 'Обувь', 'Аудио & Бас', 'Аксессуары'];
 
@@ -588,10 +589,7 @@ const MarketplaceBody = () => {
                     src={selectedProduct.image} 
                     alt={selectedProduct.title} 
                     className="wb-main-photo" 
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = PRESET_IMAGES[0].url;
-                    }}
+                    onError={(e) => handleImageError(e, 'product', selectedProduct.title)}
                   />
                   <div className="wb-photo-badges">
                     {selectedProduct.tag && (
@@ -739,7 +737,12 @@ const MarketplaceBody = () => {
                       {getProductReviews(selectedProduct).map(rev => (
                         <div key={rev.id} className="wb-review-card">
                           <div className="review-top-row">
-                            <img src={rev.avatar} alt={rev.author} className="review-avatar" />
+                            <img 
+                              src={rev.avatar} 
+                              alt={rev.author} 
+                              className="review-avatar" 
+                              onError={(e) => handleImageError(e, 'avatar', rev.author)}
+                            />
                             <div>
                               <div className="review-author">{rev.author}</div>
                               <div className="review-meta">
@@ -887,7 +890,11 @@ const MarketplaceBody = () => {
                         className={`preset-img-btn ${newImage === preset.url ? 'active' : ''}`}
                         onClick={() => setNewImage(preset.url)}
                       >
-                        <img src={preset.url} alt={preset.name} />
+                        <img 
+                          src={preset.url} 
+                          alt={preset.name} 
+                          onError={(e) => handleImageError(e, 'product', preset.name)}
+                        />
                         <span>{preset.name}</span>
                       </button>
                     ))}

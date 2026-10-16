@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { soundService } from '../../services/soundService';
+import { handleImageError, resolveAvatar } from '../../utils/cyberImages';
 
 const POPULAR_REACTIONS = [
   '🔥', '💸', '⚡', '💀', '👑', '🚀', '💣', '💯', 
@@ -349,7 +350,12 @@ const ChatWindow = ({
       <div className="chat-window-header">
         <div className="chat-header-info">
           <div className="chat-header-avatar-wrap">
-            <img src={chat.avatar} alt={chat.name} className="chat-header-avatar" />
+            <img 
+              src={resolveAvatar(chat.avatar, chat.name)} 
+              alt="" 
+              className="chat-header-avatar" 
+              onError={(e) => handleImageError(e, 'avatar', chat.name)}
+            />
             {chat.online && <span className="online-badge-dot"></span>}
           </div>
           <div>
@@ -483,7 +489,12 @@ const ChatWindow = ({
               className={`chat-message-row ${msg.isMe ? 'my-message' : 'incoming-message'} ${isPinned ? 'is-pinned-row' : ''}`}
             >
               {!msg.isMe && (
-                <img src={msg.avatar || chat.avatar} alt={msg.sender} className="msg-avatar" />
+                <img 
+                  src={resolveAvatar(msg.avatar || chat.avatar, msg.sender || chat.name)} 
+                  alt="" 
+                  className="msg-avatar" 
+                  onError={(e) => handleImageError(e, 'avatar', msg.sender || chat.name)}
+                />
               )}
 
               <div className="msg-bubble">
@@ -758,7 +769,11 @@ const ChatWindow = ({
             </span>
 
             <div className="call-user-avatar">
-              <img src={chat.avatar} alt={chat.name} />
+              <img 
+                src={resolveAvatar(chat.avatar, chat.name)} 
+                alt="" 
+                onError={(e) => handleImageError(e, 'avatar', chat.name)}
+              />
               <div className="call-pulsing-ring"></div>
             </div>
 

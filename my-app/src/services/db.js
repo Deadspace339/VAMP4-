@@ -8,6 +8,7 @@ import crownImg from '../assets/plashka.png';
 import shieldImg from '../assets/plashka2.png';
 import radioImg from '../assets/plashka3.png';
 import { mediaStore } from './mediaStore';
+import { CYBER_EDIT_POSTERS, CYBER_PRODUCT_POSTERS, createCyberAvatarSvg, resolveAvatar } from '../utils/cyberImages';
 
 let _cachedShorts = null;
 let _cachedDrafts = null;
@@ -37,7 +38,8 @@ const DEFAULT_USER = {
   rank: 'SWAG GOD',
   level: 67,
   reputation: '100% AtreiyaMODE',
-  avatarHat: 'crown' // 'crown', 'five_plus', 'odnoklassniki', 'none'
+  avatarHat: 'crown', // 'crown', 'five_plus', 'odnoklassniki', 'none'
+  avatar: macanImg
 };
 
 const DEFAULT_CHATS = [
@@ -460,7 +462,7 @@ const DEFAULT_PRODUCTS = [
 // ВКЛЮЧАЕТ АНИМЕ: БАСКЕТБОЛ КУРОКО И БЛЮ ЛОК
 // ===================================================
 export const DEFAULT_EDITS = [
-  // ⚡ РОНАЛДО 2008 PRIME
+  // 1. ⚡ РОНАЛДО 2008 PRIME
   {
     id: 'edit-ronaldo-2008',
     title: 'CRISTIANO RONALDO // 2008 PRIME UNITED 🐐',
@@ -469,13 +471,13 @@ export const DEFAULT_EDITS = [
     author: '@cr7_prime2008',
     likes: 777000,
     shares: 200800,
-    cover: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80',
+    cover: CYBER_EDIT_POSTERS['edit-ronaldo-2008'],
     videoUrl: 'https://cdn.jsdelivr.net/gh/mediaelement/mediaelement-files@master/big_buck_bunny.mp4',
     tag: 'РОНАЛДО 2008 PRIME ⚡',
     anime: 'Роналдо 2008 Prime',
     videoNote: 'Золотой Мяч 2008, Манчестер Юнайтед, штрафные с наклболом против Портсмута, финты step-over и невероятная скорость.'
   },
-  // 🔴 АРСЕНАЛ 2008 PRIME
+  // 2. 🔴 АРСЕНАЛ 2008 PRIME
   {
     id: 'edit-arsenal-2008',
     title: 'АРСЕНАЛ 2008 PRIME // WENGERBALL TIKI-TAKA 🔴',
@@ -484,13 +486,13 @@ export const DEFAULT_EDITS = [
     author: '@arsenal_prime_gunners',
     likes: 450000,
     shares: 89000,
-    cover: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&auto=format&fit=crop&q=80',
+    cover: CYBER_EDIT_POSTERS['edit-arsenal-2008'],
     videoUrl: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
     tag: 'АРСЕНАЛ 2008 PRIME 🏆',
     anime: 'Арсенал 2008 Prime',
     videoNote: 'Венгерболл в прайме: Сеск Фабрегас, Робин ван Перси, Адебайор, игра в одно касание и легендарный стиль Лондона.'
   },
-  // 🖤 БАЛЕНСИАГИ
+  // 3. 🖤 БАЛЕНСИАГИ
   {
     id: 'edit-balenciaga-mud',
     title: 'BALENCIAGA MUD SHOW // DEMNA PRIME RUNWAY 🖤',
@@ -499,13 +501,13 @@ export const DEFAULT_EDITS = [
     author: '@demna_balenciaga',
     likes: 320000,
     shares: 67000,
-    cover: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&auto=format&fit=crop&q=80',
+    cover: CYBER_EDIT_POSTERS['edit-balenciaga-mud'],
     videoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
     tag: 'БАЛЕНСИАГИ TYPE SHIT 🕶️',
     anime: 'Баленсиаги',
     videoNote: 'Грязевой подиум Balenciaga Summer 23: оверсайз бомберы, Defender sneakers, 3XL, готический high-fashion флекс.'
   },
-  // ☁️ SOUNDCLOUD TYPE SHIT
+  // 4. ☁️ SOUNDCLOUD TYPE SHIT
   {
     id: 'edit-soundcloud-vamp',
     title: 'SOUNDCLOUD TYPE SHIT // 2026 PLUGGNB DRIFT ☁️',
@@ -514,13 +516,13 @@ export const DEFAULT_EDITS = [
     author: '@soundcloud_pluggnb',
     likes: 580000,
     shares: 142000,
-    cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&auto=format&fit=crop&q=80',
+    cover: CYBER_EDIT_POSTERS['edit-soundcloud-vamp'],
     videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
     tag: 'SOUNDCLOUD TYPE SHIT ☁️',
     anime: 'SoundCloud',
     videoNote: 'Грязные 808-е, автотюн, рейдж-синт лиды, андерграунд саундклауд вайб для ночных заездов.'
   },
-  // 🏎️ СУПЕРКАРЫ / MACAN
+  // 5. 🏎️ СУПЕРКАРЫ / MACAN
   {
     id: 'edit-macan-gt3rs',
     title: 'MACAN // PORSCHE 911 GT3 RS NIGHT RUN 🏎️',
@@ -529,11 +531,71 @@ export const DEFAULT_EDITS = [
     author: '@macan_official',
     likes: 674200,
     shares: 124000,
-    cover: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=80',
+    cover: CYBER_EDIT_POSTERS['edit-macan-gt3rs'],
     videoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
     tag: 'СУПЕРКАРЫ SPEED ⚡',
     anime: 'Суперкары',
     videoNote: 'Ночной выезд по Садовому Кольцу, атмосферный Flat-6 рев, антикрыло GT3 RS и саундтрек Летник.'
+  },
+  // 6. ⚡ РОНАЛДО НАКЛБОЛ
+  {
+    id: 'edit-ronaldo-freekick',
+    title: 'CR7 KNUCKLEBALL // IMPOSSIBLE TRAJECTORY ⚡',
+    sound: 'Phonk Drill // Knuckleball King 2008',
+    audioSrc: '/свэг321.mp3',
+    author: '@cr7_freekick_god',
+    likes: 920000,
+    shares: 310000,
+    cover: CYBER_EDIT_POSTERS['edit-ronaldo-freekick'],
+    videoUrl: 'https://cdn.jsdelivr.net/gh/mediaelement/mediaelement-files@master/big_buck_bunny.mp4',
+    tag: 'РОНАЛДО 2008 PRIME ⚡',
+    anime: 'Роналдо 2008 Prime',
+    videoNote: 'Удар в девятку Портсмута 2008: мяч не вращается, Дэвид Джеймс замер на месте. Физика сломана.'
+  },
+  // 7. 👑 АРСЕНАЛ / АНРИ
+  {
+    id: 'edit-arsenal-henry',
+    title: 'THIERRY HENRY // KING OF HIGHBURY & EMIRATES 👑',
+    sound: 'London Grime 2008 // French Elegance',
+    audioSrc: '/темный принц.mp3',
+    author: '@henry14_king',
+    likes: 540000,
+    shares: 112000,
+    cover: CYBER_EDIT_POSTERS['edit-arsenal-henry'],
+    videoUrl: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+    tag: 'АРСЕНАЛ 2008 PRIME 🏆',
+    anime: 'Арсенал 2008 Prime',
+    videoNote: 'Пластика, рывки через полполя, обводки на угловом флажке и грация величайшего нападающего АПЛ.'
+  },
+  // 8. 🦇 SOUNDCLOUD / CARTI VAMP
+  {
+    id: 'edit-carti-vamp',
+    title: 'PLAYBOI CARTI // VAMP 4 ATREIYA PLUGG 🦇',
+    sound: 'F1LTHY x Pierre Bourne // Heavy Distorted Rage 2026',
+    audioSrc: '/letnik.mp3',
+    author: '@vamp4_carti',
+    likes: 812000,
+    shares: 245000,
+    cover: CYBER_EDIT_POSTERS['edit-carti-vamp'],
+    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    tag: 'SOUNDCLOUD TYPE SHIT ☁️',
+    anime: 'SoundCloud',
+    videoNote: 'Темная готика, красные стробоскопы, фирменный крик SCHYEA и максимальный вамп-вайб.'
+  },
+  // 9. 🏁 СУПЕРКАРЫ / TURBO S
+  {
+    id: 'edit-porsche-turbo',
+    title: 'PORSCHE 911 TURBO S // 1000HP SUBWAY DRIFT 🏁',
+    sound: 'Midnight City Phonk // Launch Control 2.1s',
+    audioSrc: '/letnik.mp3',
+    author: '@turbo_s_midnight',
+    likes: 710000,
+    shares: 198000,
+    cover: CYBER_EDIT_POSTERS['edit-porsche-turbo'],
+    videoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+    tag: 'СУПЕРКАРЫ SPEED ⚡',
+    anime: 'Суперкары',
+    videoNote: 'Полный привод, лаунч-контроль 0-100 за 2.1 секунды, турбины свистят на ночной эстакаде.'
   }
 ];
 
@@ -542,7 +604,7 @@ export const DEFAULT_HYPE_USERS = [
     id: 'friend_cr7',
     name: 'Cristiano Ronaldo 2008',
     handle: '@cr7_prime2008',
-    avatar: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80',
+    avatar: createCyberAvatarSvg('CR7', '#ffd700'),
     statusText: 'Prime 2008 United Goat • Ballon d\'Or',
     tags: ['#ronaldo2008', '#cr7prime', '#manutd', '#goat'],
     online: true,
@@ -553,7 +615,7 @@ export const DEFAULT_HYPE_USERS = [
     id: 'friend_arsenal',
     name: 'Arsenal 2008 Prime',
     handle: '@arsenal_prime',
-    avatar: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&auto=format&fit=crop&q=80',
+    avatar: createCyberAvatarSvg('Arsenal', '#ff2244'),
     statusText: 'Wengerball Tiki-Taka • Cesc & RVP 2008',
     tags: ['#arsenal2008', '#wengerball', '#prime', '#london'],
     online: true,
@@ -564,7 +626,7 @@ export const DEFAULT_HYPE_USERS = [
     id: 'friend_demna',
     name: 'Demna Balenciaga',
     handle: '@demna_mud',
-    avatar: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&auto=format&fit=crop&q=80',
+    avatar: createCyberAvatarSvg('Demna', '#888888'),
     statusText: 'Balenciaga Mud Runway • 3XL Defender',
     tags: ['#balenciaga', '#demna', '#typeshit', '#fashion'],
     online: true,
@@ -575,7 +637,7 @@ export const DEFAULT_HYPE_USERS = [
     id: 'friend_soundcloud',
     name: 'SoundCloud Vampire',
     handle: '@soundcloud_pluggnb',
-    avatar: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&auto=format&fit=crop&q=80',
+    avatar: createCyberAvatarSvg('SC', '#ff5500'),
     statusText: '808 Bass Boosted • Pluggnb Drift Type Beat',
     tags: ['#soundcloud', '#pluggnb', '#typeshit', '#rage808'],
     online: true,
@@ -586,7 +648,7 @@ export const DEFAULT_HYPE_USERS = [
     id: 'friend_clashking',
     name: 'Clash Royale King',
     handle: '@clash_king_67',
-    avatar: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=800&auto=format&fit=crop&q=80',
+    avatar: createCyberAvatarSvg('King', '#00e5ff'),
     statusText: 'HE-HE-HE-HA! 9000 Кубков • Mega Knight 15 lvl',
     tags: ['#clashroyale', '#heheheha', '#megaknight', '#iphone6'],
     online: true,
@@ -597,7 +659,7 @@ export const DEFAULT_HYPE_USERS = [
     id: 'friend_durakpro',
     name: 'Виктор Карточный Барон',
     handle: '@durak_pro_2008',
-    avatar: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=800&auto=format&fit=crop&q=80',
+    avatar: createCyberAvatarSvg('Виктор', '#ffaa00'),
     statusText: 'Легенда Дурака и Покера • 100% Winrate',
     tags: ['#durakmaster', '#покер', '#allin', '#cards'],
     online: true,
@@ -748,9 +810,14 @@ export const db = {
   getUser() {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.USER);
-      return data ? JSON.parse(data) : DEFAULT_USER;
+      const user = data ? JSON.parse(data) : DEFAULT_USER;
+      return {
+        ...DEFAULT_USER,
+        ...user,
+        avatar: resolveAvatar(user?.avatar || macanImg)
+      };
     } catch {
-      return DEFAULT_USER;
+      return { ...DEFAULT_USER, avatar: macanImg };
     }
   },
 
@@ -791,10 +858,13 @@ export const db = {
       const parsed = data ? JSON.parse(data) : DEFAULT_CHATS;
       // Санитизация: убираем старую строку «История очищена» и восстанавливаем чистый вид
       return parsed.map(c => {
-        if (c.lastMessage === 'История очищена') {
-          return { ...c, lastMessage: '', lastSender: '' };
+        const clean = { ...c };
+        if (clean.lastMessage === 'История очищена') {
+          clean.lastMessage = '';
+          clean.lastSender = '';
         }
-        return c;
+        clean.avatar = resolveAvatar(clean.avatar, clean.name || clean.id);
+        return clean;
       });
     } catch {
       return DEFAULT_CHATS;
@@ -1043,7 +1113,7 @@ export const db = {
       isMy: true,
       author: newShort.author || user.handle,
       authorName: newShort.authorName || user.name,
-      authorAvatar: newShort.authorAvatar || '/src/assets/macan-brat.jpg'
+      authorAvatar: newShort.authorAvatar || macanImg
     };
 
     // Надежное сохранение тяжелого медиа в IndexedDB без затирания блобов
@@ -1164,7 +1234,7 @@ export const db = {
       id: `user-clip-${Date.now()}`,
       author: user.handle,
       authorName: user.name,
-      authorAvatar: '/src/assets/macan-brat.jpg',
+      authorAvatar: macanImg,
       description: targetDraft.description || targetDraft.title || 'Мой опубликованный клип!',
       soundTitle: targetDraft.soundTitle || 'Оригинальный звук',
       audioSrc: targetDraft.audioSrc || null,
@@ -1325,15 +1395,15 @@ export const db = {
       if (data) {
         const parsed = JSON.parse(data);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // Очищаем старые ненужные аниме-эдиты
-          const filtered = parsed.filter(e => 
-            !['edit-kuroko-1', 'edit-akashi-2', 'edit-aomine-3', 'edit-isagi-4', 'edit-bachira-5', 'edit-nagi-6', 'edit-tokyo-9', 'edit-macan-7', 'edit-porsche-8'].includes(e.id)
-          );
-          const existingIds = new Set(filtered.map(e => e.id));
+          const existingIds = new Set(parsed.map(e => e.id));
           const missingDefaults = DEFAULT_EDITS.filter(d => !existingIds.has(d.id));
-          const merged = [...filtered, ...missingDefaults];
-          try { localStorage.setItem(STORAGE_KEYS.EDITS, JSON.stringify(merged)); } catch {}
-          return merged;
+          // Если есть недостающие дефолтные эдиты, объединяем их
+          if (missingDefaults.length > 0) {
+            const merged = [...parsed, ...missingDefaults];
+            try { localStorage.setItem(STORAGE_KEYS.EDITS, JSON.stringify(merged)); } catch {}
+            return merged;
+          }
+          return parsed;
         }
       }
       localStorage.setItem(STORAGE_KEYS.EDITS, JSON.stringify(DEFAULT_EDITS));
@@ -1351,12 +1421,14 @@ export const db = {
       const data = localStorage.getItem(STORAGE_KEYS.FRIENDS);
       if (data) {
         const parsed = JSON.parse(data);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed)) {
+          return parsed.map(f => ({ ...f, avatar: resolveAvatar(f.avatar, f.name) }));
+        }
       }
       localStorage.setItem(STORAGE_KEYS.FRIENDS, JSON.stringify(DEFAULT_HYPE_USERS.slice(0, 3)));
-      return DEFAULT_HYPE_USERS.slice(0, 3);
+      return DEFAULT_HYPE_USERS.slice(0, 3).map(f => ({ ...f, avatar: resolveAvatar(f.avatar, f.name) }));
     } catch {
-      return DEFAULT_HYPE_USERS.slice(0, 3);
+      return DEFAULT_HYPE_USERS.slice(0, 3).map(f => ({ ...f, avatar: resolveAvatar(f.avatar, f.name) }));
     }
   },
 

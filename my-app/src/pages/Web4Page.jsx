@@ -90,16 +90,16 @@ const POKER_MULTIPLAYER_TABLES = [
 ];
 
 const INITIAL_PVP_PLAYERS = [
-  { id: 1, name: 'MACAN (Брат)', handle: '@macan_brat', defaultBet: 100, wins: 48, avatar: '/src/assets/macan-brat.jpg', status: 'ONLINE' },
-  { id: 2, name: 'Cristiano Ronaldo 2008', handle: '@cr7_prime2008', defaultBet: 500, wins: 777, avatar: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80', status: 'BALLON D\'OR 2008' },
-  { id: 3, name: 'Arsenal 2008 Prime', handle: '@arsenal_prime', defaultBet: 300, wins: 208, avatar: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&auto=format&fit=crop&q=80', status: 'WENGERBALL' },
-  { id: 4, name: 'Demna Balenciaga', handle: '@demna_mud', defaultBet: 670, wins: 333, avatar: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&auto=format&fit=crop&q=80', status: '3XL MUD SHOW' },
-  { id: 5, name: 'SoundCloud Vampire', handle: '@soundcloud_pluggnb', defaultBet: 420, wins: 180, avatar: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&auto=format&fit=crop&q=80', status: '808 BASS GOD' },
-  { id: 6, name: 'Clash Royale King', handle: '@clash_king_67', defaultBet: 1000, wins: 999, avatar: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=800&auto=format&fit=crop&q=80', status: 'HE-HE-HE-HA!' },
-  { id: 7, name: 'Виктор Карточный Барон', handle: '@durak_pro_2008', defaultBet: 1500, wins: 1337, avatar: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=800&auto=format&fit=crop&q=80', status: 'ДУРАК MASTER' },
-  { id: 8, name: 'CyberBroker_67', handle: '@broker_dark', defaultBet: 250, wins: 22, avatar: '/src/assets/plashka3.png', status: 'READY' },
-  { id: 9, name: 'NeonSamurai', handle: '@katana_swag', defaultBet: 500, wins: 89, avatar: '/src/assets/plashka.png', status: 'HIGH_ROLLER' },
-  { id: 10, name: 'J.A.R.V.I.S. AI Dealer', handle: '@jarvis_dealer', defaultBet: 1000, wins: 154, avatar: '/src/assets/plashka2.png', status: 'BOT_BOSS' }
+  { id: 1, name: 'MACAN (Брат)', handle: '@macan_brat', defaultBet: 100, wins: 48, avatar: '/assets/macan-brat.jpg', status: 'ONLINE' },
+  { id: 2, name: 'Cristiano Ronaldo 2008', handle: '@cr7_prime2008', defaultBet: 500, wins: 777, avatar: '/assets/pozdnyakov.png', status: 'BALLON D\'OR 2008' },
+  { id: 3, name: 'Arsenal 2008 Prime', handle: '@arsenal_prime', defaultBet: 300, wins: 208, avatar: '/assets/plashka2.png', status: 'WENGERBALL' },
+  { id: 4, name: 'Demna Balenciaga', handle: '@demna_mud', defaultBet: 670, wins: 333, avatar: '/assets/plashka.png', status: '3XL MUD SHOW' },
+  { id: 5, name: 'SoundCloud Vampire', handle: '@soundcloud_pluggnb', defaultBet: 420, wins: 180, avatar: '/assets/plashka3.png', status: '808 BASS GOD' },
+  { id: 6, name: 'Clash Royale King', handle: '@clash_king_67', defaultBet: 1000, wins: 999, avatar: '/assets/plashka.png', status: 'HE-HE-HE-HA!' },
+  { id: 7, name: 'Виктор Карточный Барон', handle: '@durak_pro_2008', defaultBet: 1500, wins: 1337, avatar: '/assets/macan-brat.jpg', status: 'ДУРАК MASTER' },
+  { id: 8, name: 'CyberBroker_67', handle: '@broker_dark', defaultBet: 250, wins: 22, avatar: '/assets/plashka3.png', status: 'READY' },
+  { id: 9, name: 'NeonSamurai', handle: '@katana_swag', defaultBet: 500, wins: 89, avatar: '/assets/plashka.png', status: 'HIGH_ROLLER' },
+  { id: 10, name: 'J.A.R.V.I.S. AI Dealer', handle: '@jarvis_dealer', defaultBet: 1000, wins: 154, avatar: '/assets/plashka2.png', status: 'BOT_BOSS' }
 ];
 
 // Генерация и перемешивание колоды из 36 карт (Фишер — Йетс)

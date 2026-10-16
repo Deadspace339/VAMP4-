@@ -48,9 +48,15 @@ export async function askJarvis(userText, history = [], audioData = null) {
   // API ключ хранится только на сервере Vercel
   // ===================================================
   try {
+    const token = localStorage.getItem('swag_jwt_token');
+    const proxyHeaders = { 'Content-Type': 'application/json' };
+    if (token) {
+      proxyHeaders['Authorization'] = `Bearer ${token}`;
+    }
+
     const proxyResponse = await fetch('/api/jarvis', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: proxyHeaders,
       body: JSON.stringify({
         contents,
         systemInstruction: {
@@ -73,50 +79,10 @@ export async function askJarvis(userText, history = [], audioData = null) {
     } else {
       const errData = await proxyResponse.json().catch(() => ({}));
       console.warn(`[Jarvis] Proxy returned ${proxyResponse.status}:`, errData);
-      // Если прокси вернул fallback: true, используем локальные ответы
+      // Если прокси вернул fallback: true или ошибку, используем локальные кибер-ответы
     }
   } catch (err) {
-    console.warn('[Jarvis] Proxy request failed:', err);
-  }
-
-  // ===================================================
-  // ПОПЫТКА 2: Прямой вызов API (только для локальной разработки)
-  // Использует VITE_ переменную ТОЛЬКО в dev режиме
-  // В продакшене этот код не выполнится т.к. прокси выше сработает
-  // ===================================================
-  if (import.meta.env.DEV) {
-    const devApiKey = import.meta.env.VITE_JARVIS_API_KEY;
-    const model = import.meta.env.VITE_JARVIS_MODEL || 'gemini-2.5-flash';
-
-    if (devApiKey && devApiKey.trim() && devApiKey.trim() !== 'YOUR_API_KEY_HERE') {
-      try {
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${devApiKey.trim()}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents,
-              systemInstruction: {
-                parts: [{ text: SYSTEM_PROMPT }]
-              },
-              generationConfig: {
-                temperature: 0.7,
-                maxOutputTokens: 200
-              }
-            })
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (answer) return answer.trim();
-        }
-      } catch (fallbackErr) {
-        console.warn('[Jarvis] Dev API call failed:', fallbackErr);
-      }
-    }
+    console.warn('[Jarvis] Proxy request failed, switching to local cyber core:', err);
   }
 
   // ===================================================

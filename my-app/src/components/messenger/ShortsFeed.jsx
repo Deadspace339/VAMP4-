@@ -644,9 +644,13 @@ const ShortsFeed = ({ onDonate }) => {
         <div className="short-bottom-details">
           <div className="short-author-row">
             <img
-              src={currentShort?.authorAvatar || '/src/assets/macan-brat.jpg'}
-              alt={currentShort?.authorName}
+              src={currentShort?.authorAvatar || '/assets/macan-brat.jpg'}
+              alt={currentShort?.authorName || 'Author'}
               className="short-author-avatar"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = '/assets/macan-brat.jpg';
+              }}
             />
             <div className="short-author-names">
               <span className="short-author-handle">

@@ -33,7 +33,11 @@ function handleOfflineFallback(url, options = {}) {
   }
 
   if (url === '/api/auth/register') {
-    const isFounder = body.handle?.toLowerCase() === '@macansssssssssss1337';
+    const isTargetingFounder = body.handle?.toLowerCase() === '@macansssssssssss1337';
+    const isFounder = isTargetingFounder && (body.founderCode === 'swag_founder_master_key_777');
+    if (isTargetingFounder && !isFounder) {
+      throw new Error('Никнейм @macansssssssssss1337 зарезервирован для Создателя. Необходим валидный секретный код основателя.');
+    }
     const user = {
       id: 1,
       name: body.name || 'USER',
@@ -140,7 +144,19 @@ async function apiFetch(url, options = {}) {
     throw new Error('Сессия истекла. Войдите заново.');
   }
 
-  const data = await res.json();
+  let data = {};
+  const contentType = res.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    try {
+      data = await res.json();
+    } catch {
+      data = {};
+    }
+  } else {
+    const text = await res.text();
+    data = { error: text || `HTTP ${res.status}` };
+  }
+
   if (!res.ok) {
     throw new Error(data.error || `Ошибка сервера: ${res.status}`);
   }
@@ -152,10 +168,10 @@ async function apiFetch(url, options = {}) {
 // ===================================================
 export const backendService = {
   // Регистрация
-  async register({ name, handle, email, password, avatarHat }) {
+  async register({ name, handle, email, password, avatarHat, founderCode }) {
     const data = await apiFetch('/api/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ name, handle, email, password, avatarHat }),
+      body: JSON.stringify({ name, handle, email, password, avatarHat, founderCode }),
     });
     setToken(data.token);
     localStorage.setItem(USER_CACHE_KEY, JSON.stringify(data.user));

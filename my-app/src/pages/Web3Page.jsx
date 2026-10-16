@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { db } from '../services/db';
 import { soundService } from '../services/soundService';
+import { handleImageError } from '../utils/cyberImages';
 
 const UNLOCK_COST = 67000;
 const PEG_RATE_UAH = 67; // 1 SWAG = 67 Гривень
@@ -1070,10 +1071,7 @@ const Web3Page = () => {
                           src={edit.cover} 
                           alt="" 
                           className="slot-card-img" 
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&auto=format&fit=crop&q=80';
-                          }}
+                          onError={(e) => handleImageError(e, 'edit', edit.title)}
                         />
                         <div className="slot-card-backdrop-overlay" />
                         
@@ -1153,10 +1151,7 @@ const Web3Page = () => {
                           src={edit.cover} 
                           alt="" 
                           className="filmstrip-thumb" 
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&auto=format&fit=crop&q=80';
-                          }}
+                          onError={(e) => handleImageError(e, 'edit', edit.title)}
                         />
                         <span className="filmstrip-num">#{idx + 1}</span>
                         {isSelected && <span className="filmstrip-active-tag">В ЭФИРЕ</span>}
@@ -1645,10 +1640,7 @@ const Web3Page = () => {
                             src={currentEdit.cover} 
                             alt="" 
                             className="player-main-cover" 
-                            onError={(e) => {
-                              e.currentTarget.onerror = null;
-                              e.currentTarget.src = 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&auto=format&fit=crop&q=80';
-                            }}
+                            onError={(e) => handleImageError(e, 'edit', currentEdit.title)}
                           />
                           <div className="cover-phase-overlay">
                             <span className="cover-phase-tag">📸 ОБЛОЖКА ЭДИТА (3 СЕКУНДЫ)</span>

@@ -15,6 +15,11 @@ dist-ssr/
 .env
 .env.*
 !.env.example
+credentials.json
+token.json
+
+# Temporary & Processing files
+tmp/
 
 # Logs
 logs/

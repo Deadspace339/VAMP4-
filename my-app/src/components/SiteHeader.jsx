@@ -3,8 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { db } from '../services/db';
 import q from '../assets/macan-brat.jpg';
 import crown from '../assets/plashka.png';
+import { resolveAvatar } from '../utils/cyberImages';
 
-const SiteHeader = ({ balance, onMint }) => {
+const SiteHeader = ({ balance, onMint, authState, currentUser, onLogout }) => {
     const location = useLocation();
     const currentPath = location.pathname;
     const [showProfileModal, setShowProfileModal] = useState(false);
@@ -18,6 +19,8 @@ const SiteHeader = ({ balance, onMint }) => {
     const isWeb3 = currentPath === '/3';
     const isWeb4 = currentPath === '/4' || currentPath === '/casino';
     const isAuth = currentPath === '/auth' || currentPath === '/login';
+
+    const isLoggedIn = authState === 'authenticated' || !!currentUser || !!localStorage.getItem('swag_jwt_token');
 
     const [adhdMode, setAdhdMode] = useState(() => db.getAdhdMode());
 
@@ -112,8 +115,8 @@ const SiteHeader = ({ balance, onMint }) => {
                             >
                                 {/* Аватарка с короной */}
                                 <div className="hype-avatar-box">
-                                    <img src={q} alt="Macan" className="hype-avatar-img" />
-                                    <img src={crown} alt="Crown" className="hype-avatar-crown" />
+                                    <img src={resolveAvatar(user?.avatar) || q} alt="" className="hype-avatar-img" />
+                                    <img src={crown} alt="" className="hype-avatar-crown" />
                                     <span className="online-ping-dot"></span>
                                 </div>
 
@@ -141,15 +144,27 @@ const SiteHeader = ({ balance, onMint }) => {
                             </div>
                         </Link>
 
-                        {/* Кнопка Авторизации и Регистрации — ДО КОНЦА ВПРАВО */}
-                        <Link 
-                            to="/auth" 
-                            className={`cyber-auth-btn ${isAuth ? 'active' : ''}`}
-                            title="Вход и Регистрация узла"
-                        >
-                            <span className="cab-icon">🔐</span>
-                            <span className="cab-text">ВХОД / РЕГИСТРАЦИЯ</span>
-                        </Link>
+                        {/* Кнопка Авторизации: если авторизован — ВЫЙТИ, если нет — ВХОД / РЕГИСТРАЦИЯ */}
+                        {isLoggedIn ? (
+                            <button 
+                                type="button"
+                                className="cyber-auth-btn cyber-logout-btn"
+                                onClick={onLogout}
+                                title="Выйти из аккаунта SWAG INC."
+                            >
+                                <span className="cab-icon">🚪</span>
+                                <span className="cab-text">ВЫЙТИ</span>
+                            </button>
+                        ) : (
+                            <Link 
+                                to="/auth" 
+                                className={`cyber-auth-btn ${isAuth ? 'active' : ''}`}
+                                title="Вход и Регистрация узла"
+                            >
+                                <span className="cab-icon">🔐</span>
+                                <span className="cab-text">ВХОД / РЕГИСТРАЦИЯ</span>
+                            </Link>
+                        )}
                     </div>
                 </div>
             </header>
@@ -165,8 +180,8 @@ const SiteHeader = ({ balance, onMint }) => {
 
                         <div className="dossier-body">
                             <div className="dossier-avatar-wrap">
-                                <img src={q} alt="Avatar" className="dossier-img" />
-                                <img src={crown} alt="Crown" className="dossier-crown" />
+                                <img src={resolveAvatar(user?.avatar) || q} alt="" className="dossier-img" />
+                                <img src={crown} alt="" className="dossier-crown" />
                             </div>
 
                             <h3 className="dossier-name">{user.name} (БОСС)</h3>
@@ -228,15 +243,34 @@ const SiteHeader = ({ balance, onMint }) => {
                                 </div>
                             </div>
 
-                            <button 
-                                className="cyber-btn full-width" 
-                                style={{ marginTop: '20px' }}
-                                onClick={() => {
-                                    setShowProfileModal(false);
-                                }}
-                            >
-                                ЗАКРЫТЬ ДОСЬЕ
-                            </button>
+                            <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                                <button 
+                                    className="cyber-btn full-width" 
+                                    onClick={() => setShowProfileModal(false)}
+                                >
+                                    ЗАКРЫТЬ ДОСЬЕ
+                                </button>
+                                {isLoggedIn && (
+                                    <button 
+                                        type="button"
+                                        className="cyber-btn"
+                                        style={{ 
+                                            background: 'rgba(255, 34, 68, 0.15)', 
+                                            borderColor: '#ff2244', 
+                                            color: '#ff4d6d', 
+                                            whiteSpace: 'nowrap',
+                                            padding: '0 18px'
+                                        }}
+                                        onClick={() => {
+                                            setShowProfileModal(false);
+                                            onLogout && onLogout();
+                                        }}
+                                        title="Выйти из аккаунта"
+                                    >
+                                        🚪 ВЫЙТИ
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -140,7 +140,15 @@ const AppContent = ({ authState, currentUser, onLogout }) => {
       <div className="grain-overlay"></div>
       <div className="scanlines"></div>
       
-      {!isAuthPage && <SiteHeader balance={balance} onMint={handleMint} />}
+      {!isAuthPage && (
+        <SiteHeader 
+          balance={balance} 
+          onMint={handleMint} 
+          authState={authState}
+          currentUser={currentUser}
+          onLogout={onLogout}
+        />
+      )}
       {!isAuthPage && <AdhdSideFeeds active={adhdMode} />}
       
       <Routes>

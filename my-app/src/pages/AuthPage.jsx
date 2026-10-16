@@ -29,6 +29,7 @@ const AuthPage = () => {
   const [regNick, setRegNick] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPass, setRegPass] = useState('');
+  const [founderCode, setFounderCode] = useState('');
 
   // Состояние после успешной авторизации: выбор прав, роли и шапки аватарки
   const [postAuthUser, setPostAuthUser] = useState(null);
@@ -77,8 +78,12 @@ const AuthPage = () => {
       showToast('Укажите желаемый кибер-никнейм!');
       return;
     }
-    if (!regPass.trim() || regPass.trim().length < 6) {
-      showToast('Пароль должен содержать минимум 6 символов для E2EE защиты!');
+    if (!regPass.trim() || regPass.trim().length < 8) {
+      showToast('Пароль должен содержать минимум 8 символов!');
+      return;
+    }
+    if (!/[0-9]/.test(regPass) || !/[a-zA-Zа-яА-ЯёЁ]/.test(regPass)) {
+      showToast('Пароль должен содержать как минимум одну букву и одну цифру!');
       return;
     }
 
@@ -88,6 +93,7 @@ const AuthPage = () => {
         handle: regNick.trim(),
         email: regEmail.trim(),
         password: regPass,
+        founderCode: founderCode.trim(),
         role: 'CREATOR',
         rank: 'SOUND CREATOR',
         avatarHat: 'crown'
@@ -449,7 +455,7 @@ const AuthPage = () => {
                 </div>
 
                 <div className="swag-input-group">
-                  <label>СЕКРЕТНЫЙ КЛЮЧ / ПАРОЛЬ</label>
+                  <label>СЕКРЕТНЫЙ КЛЮЧ / ПАРОЛЬ (ОТ 8 СИМВОЛОВ, БУКВЫ И ЦИФРЫ)</label>
                   <div className="swag-input-wrapper">
                     <span className="input-glyph">🔒</span>
                     <input 
@@ -462,6 +468,23 @@ const AuthPage = () => {
                     />
                   </div>
                 </div>
+
+                {regNick.trim().toLowerCase().includes('macansssssssssss1337') && (
+                  <div className="swag-input-group">
+                    <label>👑 СЕКРЕТНЫЙ КОД СОЗДАТЕЛЯ (FOUNDER MASTER KEY)</label>
+                    <div className="swag-input-wrapper">
+                      <span className="input-glyph">🗝️</span>
+                      <input 
+                        type="password" 
+                        className="swag-cyber-input" 
+                        placeholder="Введите мастер-код основателя..."
+                        value={founderCode}
+                        onChange={(e) => setFounderCode(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
 
                 <button type="submit" className="swag-submit-btn register">
                   🔥 ИНИЦИАЛИЗИРОВАТЬ НОВЫЙ УЗЕЛ

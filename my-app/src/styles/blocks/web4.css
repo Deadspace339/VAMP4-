@@ -1703,6 +1703,20 @@
   transform: translateY(-1px);
 }
 
+.cyber-logout-btn {
+  background: rgba(255, 34, 68, 0.12);
+  border-color: #ff3355;
+  color: #ff4d6d;
+  cursor: pointer;
+}
+
+.cyber-logout-btn:hover {
+  background: #ff3355;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 51, 85, 0.6);
+  transform: translateY(-1px);
+}
+
 .cab-icon {
   font-size: 0.85rem;
 }
