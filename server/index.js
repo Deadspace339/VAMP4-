@@ -382,6 +382,121 @@ function createDefaultChats(userId) {
 }
 
 // ===================================================
+// ROOT & HEALTH CHECK ROUTES
+// ===================================================
+app.get(['/', '/api'], (req, res) => {
+  if (req.accepts('html')) {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    return res.send(`
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>SWAG INC. VAMP 4 — Backend Core</title>
+  <style>
+    body {
+      background: #08080c;
+      color: #e0e0e0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .card {
+      background: #111118;
+      border: 1px solid #ff5500;
+      box-shadow: 0 0 35px rgba(255, 85, 0, 0.25);
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 550px;
+      width: 100%;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(0, 255, 136, 0.15);
+      color: #00ff88;
+      border: 1px solid #00ff88;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+    p {
+      color: #999;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0 0 24px;
+    }
+    .routes {
+      background: #0a0a0f;
+      border-radius: 8px;
+      padding: 16px;
+      font-family: monospace;
+      font-size: 13px;
+      margin-bottom: 24px;
+      color: #aaa;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .routes div { margin-bottom: 6px; }
+    .routes span { color: #ff5500; font-weight: bold; }
+    .btn {
+      display: block;
+      text-align: center;
+      background: linear-gradient(135deg, #ff5500, #ff1a00);
+      color: #fff;
+      text-decoration: none;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(255, 85, 0, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">● СЕРВЕР АКТИВЕН // ОНЛАЙН</div>
+    <h1>🔥 SWAG INC. VAMP 4 API</h1>
+    <p>Бэкенд-сервис Express + SQLite успешно запущен на порту 3001. Это сервер программных интерфейсов (REST API). Весь графический интерфейс платформы работает на фронтенде:</p>
+    <a href="http://localhost:5173" class="btn">🚀 Открыть приложение (http://localhost:5173)</a>
+    <div style="height: 20px;"></div>
+    <div class="routes">
+      <div><strong>Подключенные сервисы API:</strong></div>
+      <div><span>POST</span> /api/auth/login</div>
+      <div><span>POST</span> /api/auth/register</div>
+      <div><span>GET </span> /api/chats</div>
+      <div><span>POST</span> /api/jarvis (E2EE AI)</div>
+      <div><span>GET </span> /api/balance</div>
+    </div>
+  </div>
+</body>
+</html>
+    `);
+  }
+  res.json({
+    status: 'online',
+    system: 'SWAG INC. VAMP 4 BACKEND API',
+    version: '1.0.0',
+    security: 'E2EE Zero-Trust Active',
+    frontend: 'http://localhost:5173'
+  });
+});
+
+// ===================================================
 // AUTH ROUTES
 // ===================================================
 
