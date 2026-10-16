@@ -1,0 +1,44 @@
+services:
+  # ===================================================
+  # 1. SWAG INC. BACKEND (Express + SQLite sql.js)
+  # ===================================================
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: swag_backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      # Persistent SQLite database storage
+      - ./server/data:/app/data
+    env_file:
+      - .env
+    environment:
+      - PORT=3001
+      - NODE_ENV=production
+    networks:
+      - swag_network
+
+  # ===================================================
+  # 2. SWAG INC. FRONTEND (React + Vite via Nginx)
+  # ===================================================
+  frontend:
+    build:
+      context: ./my-app
+      dockerfile: Dockerfile
+    container_name: swag_frontend
+    restart: unless-stopped
+    ports:
+      # Accessible both at http://localhost:5173 and standard http://localhost:80
+      - "5173:80"
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - swag_network
+
+networks:
+  swag_network:
+    driver: bridge

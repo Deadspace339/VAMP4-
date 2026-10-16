@@ -7,6 +7,8 @@
     "dev": "cd my-app && npm run dev",
     "server": "cd server && npm start",
     "start": "cd my-app && npm run preview",
-    "start:all": "node execution/start_dev.js"
+    "start:all": "node execution/start_dev.js",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down"
   }
 }
